@@ -1,17 +1,15 @@
+import json
 import os
-import requests
-import numpy as np
+import random
+import string
+
+import nltk
 import pandas as pd
 import pyodbc
+import requests
 import telebot
-import nltk
-import string
-import random
-from nltk.corpus import stopwords
 from dotenv import load_dotenv
-from telebot.types import ReplyKeyboardMarkup, ForceReply
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 
 USER_DATA = {}
 load_dotenv()
@@ -19,8 +17,8 @@ BOT_KEY = os.getenv('BOT_KEY')
 IMDB_API_KEY = os.getenv('IMDB_API_KEY')
 EMAIL_ADDERS = os.getenv('EMAIL_ADDERS')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
-bot = telebot.TeleBot(BOT_KEY)
 
+bot = telebot.TeleBot(BOT_KEY)
 conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=JRODRIGUEZDIAZZ\SQLEXPRESS;'
                       'Database=store;'
@@ -36,6 +34,8 @@ SALUDOS_OUTPUTS = ["ROBOT: Hola", "ROBOT: Hola, ¿Qué tal?", "ROBOT Hola, ¿Có
 
 DESPEDIDA_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: De nada", "ROBOT: Le estaré esperando",
                      "ROBOT: Vuelva pronto"]
+
+total_price = 0;
 
 
 def getLemerTokens():
@@ -66,35 +66,33 @@ def saludos(sentence):
 
 @bot.message_handler(["help", "start"])
 def send_message(message):
+    greeting = 'ROBOT: Si necesitas ayuda puedes consultarla con nuestros creadores Randy, Robert, Frambel usando el siguiente numero de telefono:\n\n 849-858-2406'
     bot.reply_to(message, "Hello, How are you? 🙋🏻‍♀️")
 
 
-@bot.message_handler(commands=["ask"])
+@bot.message_handler(commands=["get_info"])
 def start_ask(message):
-    markup = ReplyKeyboardMarkup()
-    msg = bot.reply_to(message, "What is your name?", reply_markup=markup)
+    markup = ForceReply()
+    text = "Para realizar compras en nuestro sistema debe de proporcionarnos algunos datos personales.\n\nCúal es tu número telefónico."
+    msg = bot.reply_to(message, text, reply_markup=markup)
     bot.register_next_step_handler(msg, ask_phone_number)
 
 
 def ask_phone_number(message):
     USER_DATA[message.chat.id] = {}
-    USER_DATA[message.chat.id]["name"] = message.text
+    USER_DATA[message.chat.id]["phone"] = message.text
     markup = ForceReply()
-    msg = bot.send_message(message.chat.id, "¿Cuál es tu número telefónico?", reply_markup=markup)
-    bot.register_next_step_handler(msg, ask_sex)
+    msg = bot.send_message(message.chat.id, "¿Cuál es tu correo electrónico?", reply_markup=markup)
+    bot.register_next_step_handler(msg, ask_email)
 
 
-def ask_sex(message):
-    if not message.text.isdigit():
-        markup = ForceReply()
-        msg = bot.send_message(message.chat.id, "¿Cuál es tu número telefónico?", reply_markup=markup)
-        bot.register_next_step_handler(msg, ask_sex)
-    else:
-        USER_DATA[message.chat.id]["phone"] = int(message.text)
-        markup = ReplyKeyboardMarkup(one_time_keyboard=True, input_field_placeholder="Pulsa el botón para enviar")
-        markup.add("Hombre", "Mujer")
-        msg = bot.send_message(message.chat.id, "¿Eres hombre o mujer?", reply_markup=markup)
-        bot.register_next_step_handler(msg, save_user_data)
+def ask_email(message):
+    USER_DATA[message.chat.id]["email"] = message.text
+    markup = ReplyKeyboardMarkup()
+    text = f'Muchas Gracias {message.from_user.first_name} {message.from_user.last_name}\n A continuación te ' \
+           f'mostraremos nuestro catálogo de películas'
+    msg = bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="HTML")
+    bot.register_next_step_handler(msg, get_movies)
 
 
 def save_user_data(message):
@@ -115,7 +113,6 @@ def get_photo(title):
     return image
 
 
-@bot.message_handler(commands=["get_movies"])
 def get_movies(message):
     query = "SELECT TOP 2 * FROM movies ORDER BY id;"
     movies = pd.read_sql_query(query, conn)
@@ -123,15 +120,41 @@ def get_movies(message):
         text = f'Información sobre {row["title"]}: \n'
         text += f'<b>Fecha de estreno: {row["release_date"]}</b>\n'
         text += f'<b>Precio: ${row["price"]}</b>\n'
+        text += f'<b>Descripción: {row["overview"]}</b>\n'
+        button = InlineKeyboardButton(text=f'🛒 Agregar película {row["title"]} carrito',
+                                      callback_data=f'{row["id"]},{message.chat.id}')
+        reply_markup = InlineKeyboardMarkup(
+            [[button]]
+        )
+        bot.reply_to(message, text, parse_mode="HTML", reply_markup=reply_markup)
 
-        bot.send_message(message.chat.id, text, parse_mode="html")
+
+def shop_movie(chat_id, title, price):
+    global total_price
+    total_price += price
+    text = f'Haz agregado la película {title}\nEl precio es de ${price}.00\nEl precio total es de ${total_price}.00'
+    bot.send_message(chat_id, text, parse_mode="html")
 
 
-if __name__ == '__main__':
-    print("Welcome to the bot")
-    bot.set_my_commands([
-        telebot.types.BotCommand(command="/start", description="Iniciar el bot"),
-        telebot.types.BotCommand(command="/get_movies", description="Obtener la lista de películas")
-    ])
-    bot.infinity_polling()
-    print("Goodbye")
+def get_movie(data):
+    movie_id, chat_id = data.split(",")
+    query = "SELECT * FROM movies WHERE id = {id};".format(id=movie_id)
+    movie = pd.read_sql_query(query, conn)
+    title = movie["title"].values[0]
+    price = movie["price"].values[0]
+    shop_movie(chat_id, title, price)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_handler(call):
+    get_movie(call.data)
+
+
+print("Welcome to the bot")
+bot.set_my_commands([
+    telebot.types.BotCommand(command="/start", description="Iniciar el bot"),
+    telebot.types.BotCommand(command="/get_info", description="Pedir la informaciones de contacto del usuario"),
+])
+bot.infinity_polling()
+# get_movie("11,1")
+print("Goodbye")
