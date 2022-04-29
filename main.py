@@ -56,6 +56,7 @@ def send_email(chat_id):
     server.login(EMAIL_ADDERS, EMAIL_PASSWORD)
     server.send_message(message)
     server.quit()
+    del message['To']
 
 
 def getLemerTokens():
@@ -68,14 +69,14 @@ def getLemerTokens():
     return lemmer
 
 
-def LemTokens(tokens):
+def lem_tokens(tokens):
     lemmer = getLemerTokens()
     return [lemmer.lemmatize(token) for token in tokens]
 
 
-def LemNormalize(text):
+def lem_normalize(text):
     remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
-    return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
+    return lem_tokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
 
 
 def saludos(sentence):
@@ -86,16 +87,38 @@ def saludos(sentence):
 
 @bot.message_handler(["help", "start"])
 def send_message(message):
-    greeting = 'ROBOT: Si necesitas ayuda puedes consultarla con nuestros creadores Randy, Robert, Frambel usando el siguiente numero de telefono:\n\n 849-858-2406'
-    bot.reply_to(message, "Hello, How are you? 🙋🏻‍♀️")
+    greeting = '¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️'
+    bot.reply_to(message, greeting)
 
 
 @bot.message_handler(commands=["get_info"])
 def start_ask(message):
     markup = ForceReply()
-    text = "Para realizar compras en nuestro sistema debe de proporcionarnos algunos datos personales.\n\nCúal es tu número telefónico."
+    text = "Para realizar compras en nuestro sistema debe de proporcionarnos algunos datos personales.\n\n¿Cuál es tu " \
+           "número telefónico?"
     msg = bot.reply_to(message, text, reply_markup=markup)
     bot.register_next_step_handler(msg, ask_phone_number)
+
+
+@bot.message_handler(commands=["buy"])
+def buy_movie(message):
+    markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    markup.add("Tarjeta de crédito", "Efectivo")
+    msg = bot.reply_to(message, "¿Cómo deseas pagar?", reply_markup=markup)
+    bot.register_next_step_handler(msg, ask_payment_method)
+
+
+def ask_payment_method(message):
+    global total_price
+    if message.text != "Tarjeta de crédito" and message.text != "Efectivo":
+        msg = bot.reply_to(message, "Por favor, ingresa una opción válida.")
+        bot.register_next_step_handler(msg, ask_payment_method)
+    else:
+        if message.text == "Efectivo":
+            total_price = total_price - (total_price * 0.1)
+        send_email(message.chat.id)
+        bot.reply_to(message,
+                     f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}.00\n\n ")
 
 
 def ask_phone_number(message):
@@ -115,16 +138,7 @@ def ask_email(message):
     bot.register_next_step_handler(msg, get_movies)
 
 
-def save_user_data(message):
-    USER_DATA[message.chat.id]["sex"] = message.text
-    text = "Datos Introducidos: \n"
-    text += f'<code>Nombre: {USER_DATA[message.chat.id]["name"]}</code>\n'
-    text += f'<code>Número telefónico: {USER_DATA[message.chat.id]["phone"]}</code>\n'
-    text += f'<code>Sexo: {USER_DATA[message.chat.id]["sex"]}</code>\n'
-    bot.send_message(message.chat.id, text, parse_mode="html")
-
-
-def get_photo(title):
+def get_movie_photo(title):
     url = "https://imdb-api.com/en/API/SearchMovie/{IMDB_API_KEY}/{title}".format(IMDB_API_KEY=IMDB_API_KEY,
                                                                                   title=title)
     response = requests.get(url)
@@ -138,9 +152,7 @@ def get_movies(message):
     movies = pd.read_sql_query(query, conn)
     for index, row in movies.iterrows():
         text = f'Información sobre {row["title"]}: \n'
-        text += f'<b>Fecha de estreno: {row["release_date"]}</b>\n'
         text += f'<b>Precio: ${row["price"]}</b>\n'
-        text += f'<b>Descripción: {row["overview"]}</b>\n'
         button = InlineKeyboardButton(text=f'🛒 Agregar película {row["title"]} carrito',
                                       callback_data=f'{row["id"]},{message.chat.id}')
         reply_markup = InlineKeyboardMarkup(
@@ -152,7 +164,8 @@ def get_movies(message):
 def shop_movie(chat_id, title, price):
     global total_price
     total_price += price
-    text = f'Haz agregado la película {title}\nEl precio es de ${price}.00\nEl precio total es de ${total_price}.00'
+    text = f'Haz agregado la película {title}\nEl precio es de ${price}.00\nEl precio total es de ${total_price}.00' \
+           f'\nPara finalizar la compra utiliza el comando /buy '
     bot.send_message(chat_id, text, parse_mode="html")
 
 
@@ -175,6 +188,6 @@ bot.set_my_commands([
     telebot.types.BotCommand(command="/start", description="Iniciar el bot"),
     telebot.types.BotCommand(command="/get_info", description="Pedir la informaciones de contacto del usuario"),
 ])
-# bot.infinity_polling()
+bot.infinity_polling()
 
 print("Goodbye")
