@@ -49,7 +49,7 @@ def send_email(chat_id):
     message['From'] = EMAIL_ADDERS
     message['To'] = USER_DATA[chat_id]["email"]
     message.set_content(
-        f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}.00\n\n ")
+        f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
 
     server = smtplib.SMTP(email_smtp, email_port)
     server.starttls()
@@ -59,7 +59,7 @@ def send_email(chat_id):
     del message['To']
 
 
-def getLemerTokens():
+def get_lemer_tokens():
     file = open(r'store.txt', 'r', errors='ignore')
     raw = file.read()
     raw = raw.lower()
@@ -70,7 +70,7 @@ def getLemerTokens():
 
 
 def lem_tokens(tokens):
-    lemmer = getLemerTokens()
+    lemmer = get_lemer_tokens()
     return [lemmer.lemmatize(token) for token in tokens]
 
 
@@ -118,7 +118,7 @@ def ask_payment_method(message):
             total_price = total_price - (total_price * 0.1)
         send_email(message.chat.id)
         bot.reply_to(message,
-                     f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}.00\n\n ")
+                     f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
 
 
 def ask_phone_number(message):
@@ -153,18 +153,45 @@ def get_movies(message):
     for index, row in movies.iterrows():
         text = f'Información sobre {row["title"]}: \n'
         text += f'<b>Precio: ${row["price"]}</b>\n'
-        button = InlineKeyboardButton(text=f'🛒 Agregar película {row["title"]} carrito',
-                                      callback_data=f'{row["id"]},{message.chat.id}')
+        button = InlineKeyboardButton(text=f'🎥 Ver detalles de {row["title"]} ',
+                                      callback_data=f'get_movie_info,{message.chat.id},{row["id"]}')
         reply_markup = InlineKeyboardMarkup(
             [[button]]
         )
-        bot.reply_to(message, text, parse_mode="HTML", reply_markup=reply_markup)
+        bot.send_message(message.chat.id, text, parse_mode="HTML", reply_markup=reply_markup)
+
+
+def get_movie_info(chat_id, movie_id):
+    query = f"SELECT * FROM movies WHERE id = {movie_id};"
+    movie = pd.read_sql_query(query, conn)
+    movie = movie.iloc[0]
+    text = f'Información sobre {movie["title"]}: \n'
+    text += f'<b>Título original: {movie["original_title"]}</b>\n'
+    text += f'<b>Precio: ${movie["price"]}</b>\n'
+    text += f'<b>Fecha de estreno:</b> {movie["release_date"]}\n'
+    text += f'<b>Puntuación IMDB:</b> {movie["vote_average"]}%\n'
+    text += f'<b>Sinopsis:</b>\n'
+    text += f'{movie["overview"][0:100]}...\n'
+    if movie["homepage"] is not None:
+        text += f'<b>Página Web:</b> <a href="{movie["homepage"]}">Ver página web</a>'
+
+    # image = get_movie_photo(movie["title"])
+    # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
+
+    shop_movie_button = InlineKeyboardButton(text=f'🎥 Comprar película ',
+                                             callback_data=f'shop_movie,{chat_id},{movie["title"]},{movie["price"]}')
+    recommend_movie_button = InlineKeyboardButton(text=f'🎥 Recomendar película ',
+                                                  callback_data=f'recommend_movie,{movie["id"]}')
+    reply_markup = InlineKeyboardMarkup(
+        [[shop_movie_button, recommend_movie_button]]
+    )
+    bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
 def shop_movie(chat_id, title, price):
     global total_price
-    total_price += price
-    text = f'Haz agregado la película {title}\nEl precio es de ${price}.00\nEl precio total es de ${total_price}.00' \
+    total_price += int(price)
+    text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
            f'\nPara finalizar la compra utiliza el comando /buy '
     bot.send_message(chat_id, text, parse_mode="html")
 
@@ -178,9 +205,18 @@ def get_movie(data):
     shop_movie(chat_id, title, price)
 
 
+def recommend_movie(data):
+    pass
+
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
-    get_movie(call.data)
+    if call.data.startswith("get_movie_info"):
+        get_movie_info(call.data.split(",")[1], call.data.split(",")[2])
+    elif call.data.startswith("shop_movie"):
+        shop_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3])
+    elif call.data.startswith("recommend_movie"):
+        recommend_movie(call.data)
 
 
 print("Welcome to the bot")
