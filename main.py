@@ -87,6 +87,7 @@ def saludos(sentence):
 
 @bot.message_handler(["help", "start"])
 def send_message(message):
+    bot.send_chat_action(message.chat.id, "typing")
     greeting = '¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️'
     bot.reply_to(message, greeting)
 
@@ -96,6 +97,7 @@ def start_ask(message):
     markup = ForceReply()
     text = "Para realizar compras en nuestro sistema debe de proporcionarnos algunos datos personales.\n\n¿Cuál es tu " \
            "número telefónico?"
+    bot.send_chat_action(message.chat.id, "typing")
     msg = bot.reply_to(message, text, reply_markup=markup)
     bot.register_next_step_handler(msg, ask_phone_number)
 
@@ -104,6 +106,7 @@ def start_ask(message):
 def buy_movie(message):
     markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     markup.add("Tarjeta de crédito", "Efectivo")
+    bot.send_chat_action(message.chat.id, "typing")
     msg = bot.reply_to(message, "¿Cómo deseas pagar?", reply_markup=markup)
     bot.register_next_step_handler(msg, ask_payment_method)
 
@@ -111,12 +114,14 @@ def buy_movie(message):
 def ask_payment_method(message):
     global total_price
     if message.text != "Tarjeta de crédito" and message.text != "Efectivo":
+        bot.send_chat_action(message.chat.id, "typing")
         msg = bot.reply_to(message, "Por favor, ingresa una opción válida.")
         bot.register_next_step_handler(msg, ask_payment_method)
     else:
         if message.text == "Efectivo":
             total_price = total_price - (total_price * 0.1)
         send_email(message.chat.id)
+        bot.send_chat_action(message.chat.id, "typing")
         bot.reply_to(message,
                      f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
 
@@ -125,6 +130,7 @@ def ask_phone_number(message):
     USER_DATA[message.chat.id] = {}
     USER_DATA[message.chat.id]["phone"] = message.text
     markup = ForceReply()
+    bot.send_chat_action(message.chat.id, "typing")
     msg = bot.send_message(message.chat.id, "¿Cuál es tu correo electrónico?", reply_markup=markup)
     bot.register_next_step_handler(msg, ask_email)
 
@@ -134,6 +140,7 @@ def ask_email(message):
     markup = ReplyKeyboardMarkup()
     text = f'Muchas Gracias {message.from_user.first_name} {message.from_user.last_name}\n A continuación te ' \
            f'mostraremos nuestro catálogo de películas'
+    bot.send_chat_action(message.chat.id, "typing")
     msg = bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="HTML")
     bot.register_next_step_handler(msg, get_movies)
 
@@ -158,6 +165,7 @@ def get_movies(message):
         reply_markup = InlineKeyboardMarkup(
             [[button]]
         )
+        bot.send_chat_action(message.chat.id, "typing")
         bot.send_message(message.chat.id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
@@ -185,6 +193,7 @@ def get_movie_info(chat_id, movie_id):
     reply_markup = InlineKeyboardMarkup(
         [[shop_movie_button, recommend_movie_button]]
     )
+    bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
@@ -192,7 +201,8 @@ def shop_movie(chat_id, title, price):
     global total_price
     total_price += int(price)
     text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
-           f'\nPara finalizar la compra utiliza el comando /buy '
+           f'\nPara finalizar la compra utiliza el comando /buy'
+    bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="html")
 
 
