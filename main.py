@@ -111,19 +111,33 @@ def buy_movie(message):
     bot.register_next_step_handler(msg, ask_payment_method)
 
 
-def ask_payment_method(message):
+def confirm_shopping(message, payment_method):
     global total_price
+    if message.text == "✅ Si":
+        if payment_method == "Efectivo":
+            total_price = total_price - (total_price * 0.1)
+        bot.send_message(message.chat.id, "Gracias por tu compra, esperamos que disfrutes tu película 🙆🏻‍♀️")
+        send_email(message.chat.id)
+    else:
+        bot.send_message(message.chat.id, "De nada, le estaré esperando 🙍🏻‍♀️")
+
+
+def shopping_confirmation(message):
+    print(message)
+    markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    markup.add("✅ Si", "❌ No")
+    bot.send_chat_action(message.chat.id, "typing")
+    msg = bot.reply_to(message, "¿Deseas confirmar tu compra?", reply_markup=markup)
+    bot.register_next_step_handler(msg, confirm_shopping, message.text)
+
+
+def ask_payment_method(message):
     if message.text != "Tarjeta de crédito" and message.text != "Efectivo":
         bot.send_chat_action(message.chat.id, "typing")
         msg = bot.reply_to(message, "Por favor, ingresa una opción válida.")
         bot.register_next_step_handler(msg, ask_payment_method)
     else:
-        if message.text == "Efectivo":
-            total_price = total_price - (total_price * 0.1)
-        send_email(message.chat.id)
-        bot.send_chat_action(message.chat.id, "typing")
-        bot.reply_to(message,
-                     f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
+        shopping_confirmation(message)
 
 
 def ask_phone_number(message):
