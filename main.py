@@ -2,7 +2,8 @@ import json
 import os
 import random
 import string
-
+import smtplib
+from email.message import EmailMessage
 import nltk
 import pandas as pd
 import pyodbc
@@ -17,8 +18,10 @@ BOT_KEY = os.getenv('BOT_KEY')
 IMDB_API_KEY = os.getenv('IMDB_API_KEY')
 EMAIL_ADDERS = os.getenv('EMAIL_ADDERS')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+CHAT_ID = os.getenv('CHAT_ID')
 
 bot = telebot.TeleBot(BOT_KEY)
+message = EmailMessage()
 conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=JRODRIGUEZDIAZZ\SQLEXPRESS;'
                       'Database=store;'
@@ -36,6 +39,23 @@ DESPEDIDA_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: 
                      "ROBOT: Vuelva pronto"]
 
 total_price = 0;
+
+
+def send_email(chat_id):
+    global total_price
+    email_smtp = "smtp.gmail.com"
+    email_port = 587
+    message['Subject'] = "Confirmación de compra de películas"
+    message['From'] = EMAIL_ADDERS
+    message['To'] = USER_DATA[chat_id]["email"]
+    message.set_content(
+        f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}.00\n\n ")
+
+    server = smtplib.SMTP(email_smtp, email_port)
+    server.starttls()
+    server.login(EMAIL_ADDERS, EMAIL_PASSWORD)
+    server.send_message(message)
+    server.quit()
 
 
 def getLemerTokens():
@@ -155,6 +175,6 @@ bot.set_my_commands([
     telebot.types.BotCommand(command="/start", description="Iniciar el bot"),
     telebot.types.BotCommand(command="/get_info", description="Pedir la informaciones de contacto del usuario"),
 ])
-bot.infinity_polling()
-# get_movie("11,1")
+# bot.infinity_polling()
+
 print("Goodbye")
