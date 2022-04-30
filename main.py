@@ -1,16 +1,17 @@
-import json
+import random
 import os
 import random
 import string
 import smtplib
 import uuid
 import threading
-from email.message import EmailMessage
 import nltk
 import pandas as pd
 import pyodbc
 import requests
 import telebot
+from datetime import datetime
+from email.message import EmailMessage
 from dotenv import load_dotenv
 from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -60,7 +61,7 @@ def send_email(chat_id):
     message['From'] = EMAIL_ADDERS
     message['To'] = user["email"]
     message.set_content(
-        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\nLuego de 1 minuto esta acción será irreversible.\nPara poder deshacer la renta, por favor, utilize el siguiente comando /check_my_rented_movies.")
+        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\nLuego de 5 minutos esta acción será irreversible.\n.")
 
     server = smtplib.SMTP(email_smtp, email_port)
     server.starttls()
@@ -189,13 +190,23 @@ def remove_movie_from_my_rentals(data):
     send_alert_message(chat_id, f"Has devuelto la película {movie_id}")
 
 
+def get_time_left(invoice_id):
+    query = f"SELECT date FROM rent WHERE id = '{invoice_id}';"
+    date = pd.read_sql_query(query, conn)
+    date = date.iloc[0]["date"]
+    time_left = 5 - ((datetime.now() - date).total_seconds() / 60.0)
+    return "{:.2f}".format(time_left)
+
+
 def show_my_rented_movies(message, pending_movies_rented):
     bot.send_chat_action(message.chat.id, "typing")
     for index, movie in pending_movies_rented.iterrows():
         movie_title = movie["title"]
         movie_id = movie["movie_id"]
         invoice_id = movie["id"]
-        text = create_message_movie_info(movie)
+        time_left = get_time_left(invoice_id)
+        text = f"<b>Tiempo restante para devolver la película:</b> {time_left} minutos\n"
+        text += create_message_movie_info(movie)
         cancel_rent_button = InlineKeyboardButton(
             text=f'¿Deseas eliminar la película {movie_title} de tus rentas pendientes?',
             callback_data=f'remove_movie,{message.chat.id},{invoice_id},{movie_id}')
@@ -254,9 +265,10 @@ def save_rent_movies(chat_id):
     query = f"INSERT INTO rent (id, chat_id, price_total) VALUES ('{rent_id}', {chat_id}, {int(total_price)});"
     cursor.execute(query)
     conn.commit()
-    time = 60
-    text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de 1 minuto esta " \
-           f"acción será irreversible."
+    time = 60 * 5
+    text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de 5 minutos esta " \
+           f"acción será irreversible.\nPara poder deshacer la renta, por favor, utilize el siguiente comando " \
+           f"/check_my_rented_movies "
     send_alert_message(chat_id, text)
     start_time = threading.Timer(time, update_invoice_status, [rent_id])
     start_time.start()
@@ -349,7 +361,8 @@ def get_movie_photo(title):
 
 
 def get_movies(message):
-    query = "SELECT TOP 2 * FROM movies ORDER BY id;"
+    top = random.randint(3, 6)
+    query = f"SELECT TOP {top} * FROM movies ORDER BY release_date DESC;"
     movies = pd.read_sql_query(query, conn)
     for index, row in movies.iterrows():
         text = f'Información sobre {row["title"]}: \n'
@@ -372,10 +385,9 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     # image = get_movie_photo(movie["title"])
     # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
 
-    rent_movie_button = InlineKeyboardButton(text=f'🎥 Rentar película ',
-                                             callback_data=f'rent_movie,{chat_id},{movie["id"]},{movie["title"]},{movie["price"]}')
-    recommend_movie_button = InlineKeyboardButton(text=f'🎥 Recomendar película ',
-                                                  callback_data=f'recommend_movie,{chat_id},{movie["id"]}')
+    rent_movie_button = InlineKeyboardButton(text=f'🛒 Rentar película ', callback_data=f'rent_movie,{movie["id"]}')
+    recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recomendar película ',
+                                                  callback_data=f'recommend_movie,{movie["id"]}')
     if show_recommend_button:
         reply_markup = InlineKeyboardMarkup(
             [[rent_movie_button, recommend_movie_button]]
@@ -388,12 +400,29 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
-def rent_movie(chat_id, id, title, price):
+def rent_movie(chat_id, movie):
     global total_price
     global movies_rented
+    movie_id = movie["id"].values[0]
+    title = movie["title"].values[0]
+    price = movie["price"].values[0]
+    release_date = movie["release_date"].values[0]
+    year = int(release_date.split("-")[0])
+    release_date = datetime.strptime(release_date, "%Y-%m-%d")
+    is_between_2016_and_2017 = 2016 <= year <= 2017
+    is_fifty_year_old = (datetime.now() - release_date).days >= 365 * 50
+    bot.send_chat_action(chat_id, "typing")
+    if is_between_2016_and_2017:
+        bot.send_message(chat_id,
+                         f"Nota: La película {title} es considerada un estreno por lo que se cobrará 200 pesos "
+                         f"a su compra 🙆🏻‍♀️")
+        total_price += 200
+    if is_fifty_year_old:
+        bot.send_message(chat_id, "Lo sentimos, no se puede rentar una película de hace más de 50 años 🙍🏻‍♀️")
+        return
 
     total_price += int(price)
-    movies_rented.append({'id': id, 'price': price})
+    movies_rented.append({'id': movie_id, 'price': price})
     text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
            f'\nPara finalizar el proceso utiliza el comando /buy'
     bot.send_chat_action(chat_id, "typing")
@@ -404,13 +433,12 @@ def get_movie(data):
     movie_id, chat_id = data.split(",")
     query = "SELECT * FROM movies WHERE id = {id};".format(id=movie_id)
     movie = pd.read_sql_query(query, conn)
-    title = movie["title"].values[0]
-    price = movie["price"].values[0]
-    rent_movie(chat_id, movie_id, title, price)
+
+    rent_movie(chat_id, movie)
 
 
-def recommend_movie(data):
-    call_function, chat_id, movie_id = data.split(",")
+def recommend_movie(data, chat_id):
+    _, movie_id = data.split(",")
     query = "SELECT TOP 4 id FROM movies ORDER BY popularity DESC;"
     movies = pd.read_sql_query(query, conn)
     for index, row in movies.iterrows():
@@ -419,14 +447,19 @@ def recommend_movie(data):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
+    chat_id = call.from_user.id
+    message_id = call.message.id
     if call.data.startswith("get_movie_info"):
         get_movie_info(call.data.split(",")[1], call.data.split(",")[2])
     elif call.data.startswith("rent_movie"):
-        rent_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3], call.data.split(",")[4])
+        movie_id = call.data.split(",")[1]
+        query = "SELECT * FROM movies WHERE id = {id};".format(id=movie_id)
+        movie = pd.read_sql_query(query, conn)
+        rent_movie(chat_id, movie)
     elif call.data.startswith("remove_movie"):
         remove_movie_from_my_rentals(call.data)
     elif call.data.startswith("recommend_movie"):
-        recommend_movie(call.data)
+        recommend_movie(call.data, chat_id)
 
 
 print("Welcome to the bot")
