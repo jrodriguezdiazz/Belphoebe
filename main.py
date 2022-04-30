@@ -4,6 +4,7 @@ import random
 import string
 import smtplib
 import uuid
+import threading
 from email.message import EmailMessage
 import nltk
 import pandas as pd
@@ -59,7 +60,7 @@ def send_email(chat_id):
     message['From'] = EMAIL_ADDERS
     message['To'] = user["email"]
     message.set_content(
-        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
+        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\nLuego de 1 minuto esta acción será irreversible.\nPara poder deshacer la renta, por favor, utilize el siguiente comando /check_my_rented_movies.")
 
     server = smtplib.SMTP(email_smtp, email_port)
     server.starttls()
@@ -241,12 +242,24 @@ def save_rent_movies_details(rent_id):
     conn.commit()
 
 
+def update_invoice_status(invoice_id):
+    query = f"UPDATE rent SET status = 0 WHERE id = '{invoice_id}';"
+    conn.execute(query)
+    conn.commit()
+
+
 def save_rent_movies(chat_id):
     global total_price
     rent_id = str(uuid.uuid4())[:20]
     query = f"INSERT INTO rent (id, chat_id, price_total) VALUES ('{rent_id}', {chat_id}, {int(total_price)});"
     cursor.execute(query)
     conn.commit()
+    time = 60
+    text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de 1 minuto esta " \
+           f"acción será irreversible."
+    send_alert_message(chat_id, text)
+    start_time = threading.Timer(time, update_invoice_status, [rent_id])
+    start_time.start()
     save_rent_movies_details(rent_id)
 
 
