@@ -3,6 +3,7 @@ import os
 import random
 import string
 import smtplib
+import uuid
 from email.message import EmailMessage
 import nltk
 import pandas as pd
@@ -42,12 +43,13 @@ total_price = 0;
 
 
 def send_email(chat_id):
+    user = get_user_data(chat_id)
     global total_price
     email_smtp = "smtp.gmail.com"
     email_port = 587
     message['Subject'] = "Confirmación de renta de películas"
     message['From'] = EMAIL_ADDERS
-    message['To'] = USER_DATA[chat_id]["email"]
+    message['To'] = user["email"]
     message.set_content(
         f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
 
@@ -58,6 +60,12 @@ def send_email(chat_id):
     server.quit()
     del message['To']
 
+
+def get_user_data(chat_id):
+    query = f"SELECT * FROM users WHERE chat_id = {chat_id};"
+    user = pd.read_sql_query(query, conn)
+    user = user.iloc[0]
+    return user
 
 def get_lemer_tokens():
     file = open(r'store.txt', 'r', errors='ignore')
@@ -94,12 +102,21 @@ def send_message(message):
 
 @bot.message_handler(commands=["get_info"])
 def start_ask(message):
-    markup = ForceReply()
-    text = "Para realizar rentas de películas en nuestro sistema debe de proporcionarnos algunos datos personales.\n\n¿Cuál es tu " \
-           "número telefónico?"
-    bot.send_chat_action(message.chat.id, "typing")
-    msg = bot.reply_to(message, text, reply_markup=markup)
-    bot.register_next_step_handler(msg, ask_phone_number)
+    if check_if_user_is_registered(message.chat.id):
+        bot.send_chat_action(message.chat.id, "typing")
+        text = f"Buenos días {message.from_user.first_name}, te recomendaré algunas películas para ti en base a las " \
+               f"películas que ya haz alquilado previamente  🙋🏻‍♀️\n "
+        bot.send_chat_action(message.chat.id, "typing")
+        bot.send_message(message.chat.id, text)
+
+        get_movies(message)
+    else:
+        markup = ForceReply()
+        text = "Para realizar rentas de películas en nuestro sistema debe de proporcionarnos algunos datos " \
+               "personales.\n\n¿Cuál es tu número telefónico?"
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, text, reply_markup=markup)
+        bot.register_next_step_handler(msg, ask_phone_number)
 
 
 @bot.message_handler(commands=["buy"])
@@ -111,11 +128,27 @@ def buy_movie(message):
     bot.register_next_step_handler(msg, ask_payment_method)
 
 
+def save_rent_movies(rent_info):
+    rent_id = str(uuid.uuid4())[:20]
+    chat_id = rent_info["chat_id"]
+    price_total = rent_info["price_total"]
+    # movies_rented = rent_info["movies_rented"]
+    query = f"insert into rent (id, chat_id, price_total) values ('{rent_id}', {chat_id}, {price_total});"
+    cursor.execute(query)
+    conn.commit()
+
+
 def confirm_rent_movies(message, payment_method):
     global total_price
     if message.text == "✅ Si":
         if payment_method == "Efectivo":
             total_price = total_price - (total_price * 0.1)
+        rent_info = {
+            "chat_id": message.chat.id,
+            "price_total": total_price,
+            # "movies_rented": movies_rented
+        }
+        save_rent_movies(rent_info)
         bot.send_message(message.chat.id, "Gracias por elegirnos, esperamos que disfrutes tu película 🙆🏻‍♀️")
         send_email(message.chat.id)
     else:
@@ -155,7 +188,34 @@ def ask_email(message):
            f'mostraremos nuestro catálogo de películas'
     bot.send_chat_action(message.chat.id, "typing")
     msg = bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="HTML")
-    bot.register_next_step_handler(msg, get_movies)
+    save_user_data(message.chat.id)
+    get_movies(msg)
+
+
+def save_user_data(chat_id):
+    phone = USER_DATA[chat_id]["phone"]
+    email = USER_DATA[chat_id]["email"]
+    query = f"INSERT INTO users (chat_id, phone, email) VALUES ({chat_id}, '{phone}', '{email}');"
+    if check_if_user_is_registered(chat_id) is False:
+        cursor.execute(query)
+        conn.commit()
+    else:
+        update_user_data(chat_id, phone, email)
+
+
+def update_user_data(chat_id, phone, email):
+    query = f"UPDATE users SET phone = '{phone}', email = '{email}' WHERE chat_id = {chat_id};"
+    cursor.execute(query)
+    conn.commit()
+
+
+def check_if_user_is_registered(chat_id):
+    query = f"SELECT * FROM users WHERE chat_id = {chat_id};"
+    cursor.execute(query)
+    if cursor.fetchone() is None:
+        return False
+    else:
+        return True
 
 
 def get_movie_photo(title):
