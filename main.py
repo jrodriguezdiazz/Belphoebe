@@ -123,7 +123,6 @@ def confirm_shopping(message, payment_method):
 
 
 def shopping_confirmation(message):
-    print(message)
     markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     markup.add("✅ Si", "❌ No")
     bot.send_chat_action(message.chat.id, "typing")
@@ -183,7 +182,7 @@ def get_movies(message):
         bot.send_message(message.chat.id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
-def get_movie_info(chat_id, movie_id):
+def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     query = f"SELECT * FROM movies WHERE id = {movie_id};"
     movie = pd.read_sql_query(query, conn)
     movie = movie.iloc[0]
@@ -203,10 +202,15 @@ def get_movie_info(chat_id, movie_id):
     shop_movie_button = InlineKeyboardButton(text=f'🎥 Comprar película ',
                                              callback_data=f'shop_movie,{chat_id},{movie["title"]},{movie["price"]}')
     recommend_movie_button = InlineKeyboardButton(text=f'🎥 Recomendar película ',
-                                                  callback_data=f'recommend_movie,{movie["id"]}')
-    reply_markup = InlineKeyboardMarkup(
-        [[shop_movie_button, recommend_movie_button]]
-    )
+                                                  callback_data=f'recommend_movie,{chat_id},{movie["id"]}')
+    if show_recommend_button:
+        reply_markup = InlineKeyboardMarkup(
+            [[shop_movie_button, recommend_movie_button]]
+        )
+    else:
+        reply_markup = InlineKeyboardMarkup(
+            [[shop_movie_button]]
+        )
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
@@ -230,7 +234,11 @@ def get_movie(data):
 
 
 def recommend_movie(data):
-    pass
+    call_function, chat_id, movie_id = data.split(",")
+    query = "SELECT TOP 4 id FROM movies ORDER BY popularity DESC;"
+    movies = pd.read_sql_query(query, conn)
+    for index, row in movies.iterrows():
+        get_movie_info(chat_id, row["id"], show_recommend_button=False)
 
 
 @bot.callback_query_handler(func=lambda call: True)
