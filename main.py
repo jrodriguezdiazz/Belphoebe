@@ -40,6 +40,7 @@ DESPEDIDA_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: 
                      "ROBOT: Vuelva pronto"]
 
 total_price = 0;
+movies_rented = []
 
 
 def send_email(chat_id):
@@ -66,6 +67,7 @@ def get_user_data(chat_id):
     user = pd.read_sql_query(query, conn)
     user = user.iloc[0]
     return user
+
 
 def get_lemer_tokens():
     file = open(r'store.txt', 'r', errors='ignore')
@@ -102,6 +104,10 @@ def send_message(message):
 
 @bot.message_handler(commands=["get_info"])
 def start_ask(message):
+    global total_price
+    global movies_rented
+    total_price = 0
+    movies_rented = []
     if check_if_user_is_registered(message.chat.id):
         bot.send_chat_action(message.chat.id, "typing")
         text = f"Buenos días {message.from_user.first_name}, te recomendaré algunas películas para ti en base a las " \
@@ -128,14 +134,24 @@ def buy_movie(message):
     bot.register_next_step_handler(msg, ask_payment_method)
 
 
-def save_rent_movies(rent_info):
+def save_rent_movies_details(rent_id):
+    global movies_rented
+    values = ""
+    for movie in movies_rented:
+        values += f"('{rent_id}', {movie['id']}, '{movie['price']}'),"
+    query = f"INSERT INTO rent_details (invoice_id, movie_id, price) VALUES {values[:-1]};"
+    print(query)
+    conn.execute(query)
+    conn.commit()
+
+
+def save_rent_movies(chat_id):
+    global total_price
     rent_id = str(uuid.uuid4())[:20]
-    chat_id = rent_info["chat_id"]
-    price_total = rent_info["price_total"]
-    # movies_rented = rent_info["movies_rented"]
-    query = f"insert into rent (id, chat_id, price_total) values ('{rent_id}', {chat_id}, {price_total});"
+    query = f"insert into rent (id, chat_id, price_total) values ('{rent_id}', {chat_id}, {total_price});"
     cursor.execute(query)
     conn.commit()
+    save_rent_movies_details(rent_id)
 
 
 def confirm_rent_movies(message, payment_method):
@@ -143,12 +159,8 @@ def confirm_rent_movies(message, payment_method):
     if message.text == "✅ Si":
         if payment_method == "Efectivo":
             total_price = total_price - (total_price * 0.1)
-        rent_info = {
-            "chat_id": message.chat.id,
-            "price_total": total_price,
-            # "movies_rented": movies_rented
-        }
-        save_rent_movies(rent_info)
+
+        save_rent_movies(message.chat.id)
         bot.send_message(message.chat.id, "Gracias por elegirnos, esperamos que disfrutes tu película 🙆🏻‍♀️")
         send_email(message.chat.id)
     else:
@@ -260,7 +272,7 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
 
     rent_movie_button = InlineKeyboardButton(text=f'🎥 Rentar película ',
-                                             callback_data=f'rent_movie,{chat_id},{movie["title"]},{movie["price"]}')
+                                             callback_data=f'rent_movie,{chat_id},{movie["id"]},{movie["title"]},{movie["price"]}')
     recommend_movie_button = InlineKeyboardButton(text=f'🎥 Recomendar película ',
                                                   callback_data=f'recommend_movie,{chat_id},{movie["id"]}')
     if show_recommend_button:
@@ -275,9 +287,12 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
-def rent_movie(chat_id, title, price):
+def rent_movie(chat_id, id, title, price):
     global total_price
+    global movies_rented
+
     total_price += int(price)
+    movies_rented.append({'id': id, 'price': price})
     text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
            f'\nPara finalizar el proceso utiliza el comando /buy'
     bot.send_chat_action(chat_id, "typing")
@@ -290,7 +305,7 @@ def get_movie(data):
     movie = pd.read_sql_query(query, conn)
     title = movie["title"].values[0]
     price = movie["price"].values[0]
-    rent_movie(chat_id, title, price)
+    rent_movie(chat_id, movie_id, title, price)
 
 
 def recommend_movie(data):
@@ -306,7 +321,7 @@ def callback_handler(call):
     if call.data.startswith("get_movie_info"):
         get_movie_info(call.data.split(",")[1], call.data.split(",")[2])
     elif call.data.startswith("rent_movie"):
-        rent_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3])
+        rent_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3], call.data.split(",")[4])
     elif call.data.startswith("recommend_movie"):
         recommend_movie(call.data)
 
