@@ -45,11 +45,11 @@ def send_email(chat_id):
     global total_price
     email_smtp = "smtp.gmail.com"
     email_port = 587
-    message['Subject'] = "Confirmación de compra de películas"
+    message['Subject'] = "Confirmación de renta de películas"
     message['From'] = EMAIL_ADDERS
     message['To'] = USER_DATA[chat_id]["email"]
     message.set_content(
-        f"Gracias por confiar en nosotros, su compra ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
+        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\n\n ")
 
     server = smtplib.SMTP(email_smtp, email_port)
     server.starttls()
@@ -95,7 +95,7 @@ def send_message(message):
 @bot.message_handler(commands=["get_info"])
 def start_ask(message):
     markup = ForceReply()
-    text = "Para realizar compras en nuestro sistema debe de proporcionarnos algunos datos personales.\n\n¿Cuál es tu " \
+    text = "Para realizar rentas de películas en nuestro sistema debe de proporcionarnos algunos datos personales.\n\n¿Cuál es tu " \
            "número telefónico?"
     bot.send_chat_action(message.chat.id, "typing")
     msg = bot.reply_to(message, text, reply_markup=markup)
@@ -111,23 +111,23 @@ def buy_movie(message):
     bot.register_next_step_handler(msg, ask_payment_method)
 
 
-def confirm_shopping(message, payment_method):
+def confirm_rent_movies(message, payment_method):
     global total_price
     if message.text == "✅ Si":
         if payment_method == "Efectivo":
             total_price = total_price - (total_price * 0.1)
-        bot.send_message(message.chat.id, "Gracias por tu compra, esperamos que disfrutes tu película 🙆🏻‍♀️")
+        bot.send_message(message.chat.id, "Gracias por elegirnos, esperamos que disfrutes tu película 🙆🏻‍♀️")
         send_email(message.chat.id)
     else:
         bot.send_message(message.chat.id, "De nada, le estaré esperando 🙍🏻‍♀️")
 
 
-def shopping_confirmation(message):
+def rent_confirmation(message):
     markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     markup.add("✅ Si", "❌ No")
     bot.send_chat_action(message.chat.id, "typing")
     msg = bot.reply_to(message, "¿Deseas confirmar tu compra?", reply_markup=markup)
-    bot.register_next_step_handler(msg, confirm_shopping, message.text)
+    bot.register_next_step_handler(msg, confirm_rent_movies, message.text)
 
 
 def ask_payment_method(message):
@@ -136,7 +136,7 @@ def ask_payment_method(message):
         msg = bot.reply_to(message, "Por favor, ingresa una opción válida.")
         bot.register_next_step_handler(msg, ask_payment_method)
     else:
-        shopping_confirmation(message)
+        rent_confirmation(message)
 
 
 def ask_phone_number(message):
@@ -199,27 +199,27 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     # image = get_movie_photo(movie["title"])
     # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
 
-    shop_movie_button = InlineKeyboardButton(text=f'🎥 Comprar película ',
-                                             callback_data=f'shop_movie,{chat_id},{movie["title"]},{movie["price"]}')
+    rent_movie_button = InlineKeyboardButton(text=f'🎥 Rentar película ',
+                                             callback_data=f'rent_movie,{chat_id},{movie["title"]},{movie["price"]}')
     recommend_movie_button = InlineKeyboardButton(text=f'🎥 Recomendar película ',
                                                   callback_data=f'recommend_movie,{chat_id},{movie["id"]}')
     if show_recommend_button:
         reply_markup = InlineKeyboardMarkup(
-            [[shop_movie_button, recommend_movie_button]]
+            [[rent_movie_button, recommend_movie_button]]
         )
     else:
         reply_markup = InlineKeyboardMarkup(
-            [[shop_movie_button]]
+            [[rent_movie_button]]
         )
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
-def shop_movie(chat_id, title, price):
+def rent_movie(chat_id, title, price):
     global total_price
     total_price += int(price)
     text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
-           f'\nPara finalizar la compra utiliza el comando /buy'
+           f'\nPara finalizar el proceso utiliza el comando /buy'
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="html")
 
@@ -230,7 +230,7 @@ def get_movie(data):
     movie = pd.read_sql_query(query, conn)
     title = movie["title"].values[0]
     price = movie["price"].values[0]
-    shop_movie(chat_id, title, price)
+    rent_movie(chat_id, title, price)
 
 
 def recommend_movie(data):
@@ -245,8 +245,8 @@ def recommend_movie(data):
 def callback_handler(call):
     if call.data.startswith("get_movie_info"):
         get_movie_info(call.data.split(",")[1], call.data.split(",")[2])
-    elif call.data.startswith("shop_movie"):
-        shop_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3])
+    elif call.data.startswith("rent_movie"):
+        rent_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3])
     elif call.data.startswith("recommend_movie"):
         recommend_movie(call.data)
 
