@@ -43,6 +43,13 @@ total_price = 0;
 movies_rented = []
 
 
+def reset_global_variables():
+    global total_price
+    global movies_rented
+    total_price = 0
+    movies_rented = []
+
+
 def send_email(chat_id):
     user = get_user_data(chat_id)
     global total_price
@@ -104,10 +111,7 @@ def send_message(message):
 
 @bot.message_handler(commands=["get_info"])
 def start_ask(message):
-    global total_price
-    global movies_rented
-    total_price = 0
-    movies_rented = []
+    reset_global_variables()
     if check_if_user_is_registered(message.chat.id):
         bot.send_chat_action(message.chat.id, "typing")
         text = f"Buenos días {message.from_user.first_name}, te recomendaré algunas películas para ti en base a las " \
@@ -134,13 +138,105 @@ def buy_movie(message):
     bot.register_next_step_handler(msg, ask_payment_method)
 
 
+def get_movie_price(movie_id):
+    query = f"SELECT price FROM movies WHERE id = {movie_id};"
+    price = pd.read_sql_query(query, conn)
+    price = price.iloc[0]["price"]
+    return price
+
+
+def get_total_invoice_price(invoice_id):
+    query = f"SELECT price_total FROM rent WHERE id = '{invoice_id}';"
+    price = pd.read_sql_query(query, conn)
+    price = price.iloc[0]["price_total"]
+    return price
+
+
+def check_if_user_has_movies_rented(invoice_id):
+    query = f"SELECT * FROM rent_details WHERE invoice_id = '{invoice_id}';"
+    movies = pd.read_sql_query(query, conn)
+    if movies.empty:
+        return False
+    else:
+        return True
+
+
+def update_invoice_price(invoice_id, movie_price):
+    user_has_movies_rented = check_if_user_has_movies_rented(invoice_id)
+    if user_has_movies_rented:
+        price_total = get_total_invoice_price(invoice_id)
+        price_total -= movie_price
+        query = f"UPDATE rent SET price_total = {price_total} WHERE id = '{invoice_id}';"
+    else:
+        query = f"DELETE FROM rent WHERE id = '{invoice_id}';"
+    conn.execute(query)
+    conn.commit()
+
+
+def send_alert_message(chat_id, text):
+    bot.send_chat_action(chat_id, "typing")
+    bot.send_message(chat_id, text)
+
+
+def remove_movie_from_my_rentals(data):
+    function_name, chat_id, invoice_id, movie_id = data.split(",")
+    movie_price = get_movie_price(movie_id)
+    query = f"DELETE FROM rent_details WHERE invoice_id = '{invoice_id}' AND movie_id = {movie_id};"
+    conn.execute(query)
+    conn.commit()
+    update_invoice_price(invoice_id, movie_price)
+    send_alert_message(chat_id, f"Has devuelto la película {movie_id}")
+
+
+def show_my_rented_movies(message, pending_movies_rented):
+    bot.send_chat_action(message.chat.id, "typing")
+    for index, movie in pending_movies_rented.iterrows():
+        movie_title = movie["title"]
+        movie_id = movie["movie_id"]
+        invoice_id = movie["id"]
+        text = create_message_movie_info(movie)
+        cancel_rent_button = InlineKeyboardButton(
+            text=f'¿Deseas eliminar la película {movie_title} de tus rentas pendientes?',
+            callback_data=f'remove_movie,{message.chat.id},{invoice_id},{movie_id}')
+        reply_markup = InlineKeyboardMarkup(
+            [[cancel_rent_button]]
+        )
+        bot.send_chat_action(message.chat.id, "typing")
+        bot.send_message(message.chat.id, text, parse_mode="HTML", reply_markup=reply_markup)
+
+
+def create_message_movie_info(movie):
+    text = f'Información sobre {movie["title"]}: \n'
+    text += f'<b>Título original: {movie["original_title"]}</b>\n'
+    text += f'<b>Precio: ${movie["price"]}</b>\n'
+    text += f'<b>Fecha de estreno:</b> {movie["release_date"]}\n'
+    text += f'<b>Puntuación IMDB:</b> {round(movie["vote_average"], 1)}\n'
+    text += f'<b>Sinopsis:</b>\n'
+    text += f'{movie["overview"][0:100]}...\n'
+    if movie["homepage"] is not None:
+        text += f'<b>Página Web:</b> <a href="{movie["homepage"]}">Ver página web</a>'
+    return text
+
+
+@bot.message_handler(commands=["check_my_rented_movies"])
+def check_my_rented_movies(message):
+    query = f"SELECT * FROM view_pending_rented_movies({message.chat.id});"
+    movies = pd.read_sql_query(query, conn)
+    bot.send_chat_action(message.chat.id, "typing")
+    if movies.empty:
+        bot.send_message(message.chat.id, "No tienes películas alquiladas por el momento.\nDeseas que te recomiende "
+                                          "algunas películas en base a tu historial?")
+    else:
+        bot.send_message(message.chat.id, "Estas son las películas que tienes alquiladas")
+        show_my_rented_movies(message, movies)
+
+
 def save_rent_movies_details(rent_id):
     global movies_rented
     values = ""
     for movie in movies_rented:
         values += f"('{rent_id}', {movie['id']}, '{movie['price']}'),"
     query = f"INSERT INTO rent_details (invoice_id, movie_id, price) VALUES {values[:-1]};"
-    print(query)
     conn.execute(query)
     conn.commit()
 
@@ -148,7 +244,7 @@ def save_rent_movies_details(rent_id):
 def save_rent_movies(chat_id):
     global total_price
     rent_id = str(uuid.uuid4())[:20]
-    query = f"insert into rent (id, chat_id, price_total) values ('{rent_id}', {chat_id}, {total_price});"
+    query = f"INSERT INTO rent (id, chat_id, price_total) VALUES ('{rent_id}', {chat_id}, {int(total_price)});"
     cursor.execute(query)
     conn.commit()
     save_rent_movies_details(rent_id)
@@ -258,15 +354,7 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     query = f"SELECT * FROM movies WHERE id = {movie_id};"
     movie = pd.read_sql_query(query, conn)
     movie = movie.iloc[0]
-    text = f'Información sobre {movie["title"]}: \n'
-    text += f'<b>Título original: {movie["original_title"]}</b>\n'
-    text += f'<b>Precio: ${movie["price"]}</b>\n'
-    text += f'<b>Fecha de estreno:</b> {movie["release_date"]}\n'
-    text += f'<b>Puntuación IMDB:</b> {movie["vote_average"]}%\n'
-    text += f'<b>Sinopsis:</b>\n'
-    text += f'{movie["overview"][0:100]}...\n'
-    if movie["homepage"] is not None:
-        text += f'<b>Página Web:</b> <a href="{movie["homepage"]}">Ver página web</a>'
+    text = create_message_movie_info(movie)
 
     # image = get_movie_photo(movie["title"])
     # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
@@ -322,6 +410,8 @@ def callback_handler(call):
         get_movie_info(call.data.split(",")[1], call.data.split(",")[2])
     elif call.data.startswith("rent_movie"):
         rent_movie(call.data.split(",")[1], call.data.split(",")[2], call.data.split(",")[3], call.data.split(",")[4])
+    elif call.data.startswith("remove_movie"):
+        remove_movie_from_my_rentals(call.data)
     elif call.data.startswith("recommend_movie"):
         recommend_movie(call.data)
 
@@ -330,6 +420,7 @@ print("Welcome to the bot")
 bot.set_my_commands([
     telebot.types.BotCommand(command="/start", description="Iniciar el bot"),
     telebot.types.BotCommand(command="/get_info", description="Pedir la informaciones de contacto del usuario"),
+    telebot.types.BotCommand(command="/check_my_rented_movies", description="Ver las películas que has rentado"),
 ])
 bot.infinity_polling()
 
