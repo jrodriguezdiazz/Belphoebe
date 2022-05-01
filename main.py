@@ -129,25 +129,32 @@ def send_help(message):
     \n
     /start - Inicia el chat con el bot
     /help - Muestra esta ayuda
+    /recommend - Recomienda película en base a tus gustos
+    /register - Registra tu correo electrónico y número telefónico en el sistema
     /rent - Rentar una película
     /show - Mostrar las películas rentadas
-    /price - Mostrar el precio total de las películas rentadas
-    /cancel_all - Cancelar todas las películas rentadas
+    /cancel - Cancelar todas las películas rentadas
     /exit - Salir del chat con el bot
     ''')
 
 
-@bot.message_handler(commands=["get_info"])
-def start_ask(message):
+@bot.message_handler(commands=['recommend'])
+def send_recommend(message):
+    if check_if_user_is_registered(message.chat.id):
+        get_movies(message)
+    else:
+        bot.send_chat_action(message.chat.id, "typing")
+        bot.reply_to(message, 'Para poder recomendar películas, primero debes registrarte.\n\n/register')
+        register_user(message)
+
+
+@bot.message_handler(commands=["register"])
+def register_user(message):
     reset_global_variables()
     if check_if_user_is_registered(message.chat.id):
-        bot.send_chat_action(message.chat.id, "typing")
-        text = f"Buenos días {message.from_user.first_name}, te recomendaré algunas películas para ti en base a las " \
-               f"películas que ya haz alquilado previamente 🧏🏻‍♀️\n "
-        bot.send_chat_action(message.chat.id, "typing")
-        bot.send_message(message.chat.id, text)
-
-        get_movies(message)
+        text = f"Buenos días {message.from_user.first_name}, ya estás registrado en el sistema. Si te parece utiliza " \
+               f"el comando /recommend para recomendarte películas según tus gustos\n "
+        send_alert_message(message.chat.id, text)
     else:
         markup = ForceReply()
         text = "Para realizar rentas de películas en nuestro sistema debe de proporcionarnos algunos datos " \
@@ -175,11 +182,38 @@ def check_my_rented_movies(message):
     movies = pd.read_sql_query(query, conn)
     bot.send_chat_action(message.chat.id, "typing")
     if movies.empty:
-        bot.send_message(message.chat.id, "No tienes películas alquiladas por el momento.\nDeseas que te recomiende "
-                                          "algunas películas en base a tu historial?")
+        bot.send_message(message.chat.id, "No tienes películas alquiladas por el momento.\nSi deseas que te recomiende "
+                                          "algunas películas en base a tu historial utiliza el comando /recommend")
     else:
         bot.send_message(message.chat.id, "Estas son las películas que tienes alquiladas")
         show_my_rented_movies(message, movies)
+
+
+@bot.message_handler(commands=["cancel"])
+def cancel_all_rented_movies(message):
+    bot.send_chat_action(message.chat.id, "typing")
+    if check_if_user_has_rented_movies():
+        markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        markup.add("✅ Si", "❌ No")
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "¿Estás seguro que deseas cancelar todas las películas?", reply_markup=markup)
+        bot.register_next_step_handler(msg, cancel_all_rented_movies_confirmation)
+    else:
+        send_alert_message(message.chat.id, "No tienes películas alquiladas por el momento.\nSi deseas que te "
+                                            "recomiende algunas películas en base a tu historial utiliza el comando "
+                                            "/recommend")
+
+
+def cancel_all_rented_movies_confirmation(message):
+    if message.text == "✅ Si":
+        bot.send_chat_action(message.chat.id, "typing")
+        bot.send_message(message.chat.id, "Cancelando todas las películas...")
+        reset_global_variables()
+        send_alert_message(message.chat.id, "Todas las películas han sido canceladas 🙍🏻‍♀️")
+    elif message.text == "❌ No":
+        send_alert_message(message.chat.id, "Cancelación cancelada 🙅🏻‍♀️")
+    else:
+        send_alert_message(message.chat.id, "Respuesta no válida 🙅🏻‍♀️")
 
 
 def check_if_user_has_rented_movies():
@@ -254,7 +288,7 @@ def show_my_rented_movies(message, pending_movies_rented):
         text = f"<b>Tiempo restante para devolver la película:</b> <i>{time_left} minutos</i>\n"
         text += create_message_movie_info(movie)
         cancel_rent_button = InlineKeyboardButton(
-            text=f'¿Deseas devolver la película {movie_title} de tus rentas pendientes?',
+            text=f'Hazme click si deseas devolver esta película',
             callback_data=f'remove_movie,{invoice_id},{movie_id}')
         reply_markup = InlineKeyboardMarkup(
             [[cancel_rent_button]]
@@ -449,7 +483,7 @@ def rent_movie(chat_id, movie):
     total_price += int(price)
     movies_rented.append({'id': movie_id, 'price': price})
     text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
-           f'\nPara finalizar el proceso utiliza el comando /rent'
+           f'\nPara finalizar el proceso utiliza el comando /rent\nPara cancelar el proceso utiliza el comando /cancel'
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="html")
 
@@ -564,10 +598,12 @@ print("Welcome to the bot")
 bot.set_my_commands([
     telebot.types.BotCommand(command="/start", description="Inicia el chat con el bot"),
     telebot.types.BotCommand(command="/help", description="Muestra la ayuda del bot"),
+    telebot.types.BotCommand(command="/recommend", description="Recomienda película en base a tus gustos"),
+    telebot.types.BotCommand(command="/register",
+                             description="Registra tu correo electrónico y número telefónico en el sistema"),
     telebot.types.BotCommand(command="/rent", description="Rentar una película"),
     telebot.types.BotCommand(command="/show", description="Muestra las películas rentadas"),
-    telebot.types.BotCommand(command="/cancel", description="Cancelar la renta de una película"),
-    telebot.types.BotCommand(command="/cancel_all", description="Cancelar todas las películas rentadas"),
+    telebot.types.BotCommand(command="/cancel", description="Cancelar la renta de la o las películas"),
     telebot.types.BotCommand(command="/exit", description="Salir del chat con el bot")
 ])
 bot.infinity_polling()
