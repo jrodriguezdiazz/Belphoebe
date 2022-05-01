@@ -349,12 +349,15 @@ def confirm_rent_movies(message, payment_method):
     if message.text == "✅ Si":
         if payment_method == "Efectivo":
             total_price = total_price - (total_price * 0.1)
-
         save_rent_movies(message.chat.id)
-        bot.send_message(message.chat.id, "Gracias por elegirnos, esperamos que disfrutes tu película 🙆🏻‍♀️")
+        send_alert_message(message.chat.id, "Gracias por elegirnos, esperamos que disfrutes tu película 🙆🏻‍♀️")
         send_email(message.chat.id)
+    elif message.text == "❌ No":
+        send_alert_message(message.chat.id, "De nada, le estaré esperando 🙍🏻‍♀️")
     else:
-        bot.send_message(message.chat.id, "De nada, le estaré esperando 🙍🏻‍♀️")
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.send_message(message.chat.id, "No entiendo, por favor, intente de nuevo 🙍🏻‍♀️")
+        bot.register_next_step_handler(msg, rent_confirmation)
 
 
 def rent_confirmation(message):
@@ -368,19 +371,34 @@ def rent_confirmation(message):
 def ask_payment_method(message):
     if message.text != "Tarjeta de crédito" and message.text != "Efectivo":
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "Por favor, ingresa una opción válida.")
+        msg = bot.reply_to(message, "Por favor, ingresa una opción válida.\nDebe de seleccionar 'Tarjeta de crédito' "
+                                    "o 'Efectivo'")
         bot.register_next_step_handler(msg, ask_payment_method)
     else:
         rent_confirmation(message)
 
 
 def ask_phone_number(message):
-    USER_DATA[message.chat.id] = {}
-    USER_DATA[message.chat.id]["phone"] = message.text
-    markup = ForceReply()
-    bot.send_chat_action(message.chat.id, "typing")
-    msg = bot.send_message(message.chat.id, "¿Cuál es tu correo electrónico?", reply_markup=markup)
-    bot.register_next_step_handler(msg, ask_email)
+    phone = message.text
+    if is_valid_phone(phone):
+        USER_DATA[message.chat.id] = {}
+        USER_DATA[message.chat.id]["phone"] = message.text
+        markup = ForceReply()
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.send_message(message.chat.id, "¿Cuál es tu correo electrónico?", reply_markup=markup)
+        bot.register_next_step_handler(msg, ask_email)
+    else:
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "Por favor, ingresa un número de teléfono válido.")
+        bot.register_next_step_handler(msg, ask_phone_number)
+
+
+def is_valid_phone(phone):
+    regex = r'^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$'
+    if re.match(regex, phone):
+        return True
+    else:
+        return False
 
 
 def ask_email(message):
