@@ -114,6 +114,7 @@ def saludos(sentence):
 
 @bot.message_handler(["help", "start"])
 def send_message(message):
+    reset_global_variables()
     bot.send_chat_action(message.chat.id, "typing")
     greeting = '¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️'
     bot.reply_to(message, greeting)
