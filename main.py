@@ -112,12 +112,28 @@ def saludos(sentence):
             return random.choice(SALUDOS_OUTPUTS)
 
 
-@bot.message_handler(["help", "start"])
+@bot.message_handler(["start"])
 def send_message(message):
     reset_global_variables()
     bot.send_chat_action(message.chat.id, "typing")
     greeting = '¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️'
     bot.reply_to(message, greeting)
+
+
+@bot.message_handler(commands=['help'])
+def send_help(message):
+    bot.send_chat_action(message.chat.id, "typing")
+    bot.reply_to(message, '''
+    ¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️
+    \n
+    /start - Inicia el chat con el bot
+    /help - Muestra esta ayuda
+    /rent - Rentar una película
+    /show - Mostrar las películas rentadas
+    /price - Mostrar el precio total de las películas rentadas
+    /cancel_all - Cancelar todas las películas rentadas
+    /exit - Salir del chat con el bot
+    ''')
 
 
 @bot.message_handler(commands=["get_info"])
@@ -140,13 +156,26 @@ def start_ask(message):
         bot.register_next_step_handler(msg, ask_phone_number)
 
 
-@bot.message_handler(commands=["buy"])
-def buy_movie(message):
+@bot.message_handler(commands=["rent"])
+def rent_movie(message):
     markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     markup.add("Tarjeta de crédito", "Efectivo")
     bot.send_chat_action(message.chat.id, "typing")
     msg = bot.reply_to(message, "¿Cómo deseas pagar?", reply_markup=markup)
     bot.register_next_step_handler(msg, ask_payment_method)
+
+
+@bot.message_handler(commands=["show"])
+def check_my_rented_movies(message):
+    query = f"SELECT * FROM view_pending_rented_movies({message.chat.id});"
+    movies = pd.read_sql_query(query, conn)
+    bot.send_chat_action(message.chat.id, "typing")
+    if movies.empty:
+        bot.send_message(message.chat.id, "No tienes películas alquiladas por el momento.\nDeseas que te recomiende "
+                                          "algunas películas en base a tu historial?")
+    else:
+        bot.send_message(message.chat.id, "Estas son las películas que tienes alquiladas")
+        show_my_rented_movies(message, movies)
 
 
 def get_movie_price(movie_id):
@@ -217,7 +246,7 @@ def show_my_rented_movies(message, pending_movies_rented):
         text = f"<b>Tiempo restante para devolver la película:</b> <i>{time_left} minutos</i>\n"
         text += create_message_movie_info(movie)
         cancel_rent_button = InlineKeyboardButton(
-            text=f'¿Deseas eliminar la película {movie_title} de tus rentas pendientes?',
+            text=f'¿Deseas devolver la película {movie_title} de tus rentas pendientes?',
             callback_data=f'remove_movie,{invoice_id},{movie_id}')
         reply_markup = InlineKeyboardMarkup(
             [[cancel_rent_button]]
@@ -240,19 +269,6 @@ def create_message_movie_info(movie, index=None, with_overview=True):
     if movie["homepage"] is not None:
         text += f'<b>Página Web:</b> <i><a href="{movie["homepage"]}">{movie["homepage"]}</a></i>'
     return text + "\n\n"
-
-
-@bot.message_handler(commands=["check_my_rented_movies"])
-def check_my_rented_movies(message):
-    query = f"SELECT * FROM view_pending_rented_movies({message.chat.id});"
-    movies = pd.read_sql_query(query, conn)
-    bot.send_chat_action(message.chat.id, "typing")
-    if movies.empty:
-        bot.send_message(message.chat.id, "No tienes películas alquiladas por el momento.\nDeseas que te recomiende "
-                                          "algunas películas en base a tu historial?")
-    else:
-        bot.send_message(message.chat.id, "Estas son las películas que tienes alquiladas")
-        show_my_rented_movies(message, movies)
 
 
 def save_rent_movies_details(rent_id):
@@ -280,7 +296,7 @@ def save_rent_movies(chat_id):
     time = 60 * 5
     text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de 5 minutos esta " \
            f"acción será irreversible.\nPara poder deshacer la renta, por favor, utilize el siguiente comando " \
-           f"/check_my_rented_movies "
+           f"/show "
     send_alert_message(chat_id, text)
     start_time = threading.Timer(time, update_invoice_status, [rent_id])
     start_time.start()
@@ -425,7 +441,7 @@ def rent_movie(chat_id, movie):
     total_price += int(price)
     movies_rented.append({'id': movie_id, 'price': price})
     text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
-           f'\nPara finalizar el proceso utiliza el comando /buy'
+           f'\nPara finalizar el proceso utiliza el comando /rent'
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="html")
 
@@ -538,9 +554,12 @@ def callback_handler(call):
 
 print("Welcome to the bot")
 bot.set_my_commands([
-    telebot.types.BotCommand(command="/start", description="Iniciar el bot"),
-    telebot.types.BotCommand(command="/get_info", description="Pedir la informaciones de contacto del usuario"),
-    telebot.types.BotCommand(command="/check_my_rented_movies", description="Ver las películas que has rentado"),
+    telebot.types.BotCommand(command="/start", description="Inicia el chat con el bot"),
+    telebot.types.BotCommand(command="/help", description="Muestra esta ayuda"),
+    telebot.types.BotCommand(command="/rent", description="Rentar una película"),
+    telebot.types.BotCommand(command="/cancel", description="Cancelar la renta de una película"),
+    telebot.types.BotCommand(command="/cancel_all", description="Cancelar todas las películas rentadas"),
+    telebot.types.BotCommand(command="/exit", description="Salir del chat con el bot")
 ])
 bot.infinity_polling()
 
