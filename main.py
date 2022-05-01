@@ -125,7 +125,7 @@ def start_ask(message):
     if check_if_user_is_registered(message.chat.id):
         bot.send_chat_action(message.chat.id, "typing")
         text = f"Buenos días {message.from_user.first_name}, te recomendaré algunas películas para ti en base a las " \
-               f"películas que ya haz alquilado previamente  🙋🏻‍♀️\n "
+               f"películas que ya haz alquilado previamente 🧏🏻‍♀️\n "
         bot.send_chat_action(message.chat.id, "typing")
         bot.send_message(message.chat.id, text)
 
@@ -213,7 +213,7 @@ def show_my_rented_movies(message, pending_movies_rented):
         movie_id = movie["movie_id"]
         invoice_id = movie["id"]
         time_left = get_time_left(invoice_id)
-        text = f"<b>Tiempo restante para devolver la película:</b> {time_left} minutos\n"
+        text = f"<b>Tiempo restante para devolver la película:</b> <i>{time_left} minutos</i>\n"
         text += create_message_movie_info(movie)
         cancel_rent_button = InlineKeyboardButton(
             text=f'¿Deseas eliminar la película {movie_title} de tus rentas pendientes?',
@@ -231,13 +231,13 @@ def create_message_movie_info(movie, index=None, with_overview=True):
     else:
         text = f'{index} - {movie["title"]}: \n'
     if with_overview:
-        text += f'{movie["overview"][0:300]}...\n'
-    text += f'<b>Título original: {movie["original_title"]}</b>\n'
-    text += f'<b>Precio: ${movie["price"]}</b>\n'
-    text += f'<b>Fecha de estreno:</b> {movie["release_date"]}\n'
-    text += f'<b>Puntuación IMDB:</b> {round(movie["vote_average"], 1)}\n'
+        text += f'<i>{movie["overview"][0:300]}...</i>\n'
+    text += f'<b>Título original:</b> <i>{movie["original_title"]}</i>\n'
+    text += f'<b>Precio:</b> <i>${movie["price"]}</i>\n'
+    text += f'<b>Fecha de estreno:</b> <i>{movie["release_date"]}</i>\n'
+    text += f'<b>Puntuación IMDB:</b> <i>{round(movie["vote_average"], 1)}</i>\n'
     if movie["homepage"] is not None:
-        text += f'<b>Página Web:</b> <a href="{movie["homepage"]}">{movie["homepage"]}</a>'
+        text += f'<b>Página Web:</b> <i><a href="{movie["homepage"]}">{movie["homepage"]}</a></i>'
     return text + "\n\n"
 
 
