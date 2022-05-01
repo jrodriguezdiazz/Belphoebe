@@ -470,20 +470,58 @@ def show_movies(chat_id, movies, page=0, message_id=None):
         pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
 
 
+@bot.callback_query_handler(lambda call: call.data.startswith("get_movie_info"))
+def handler_get_movie_info(call):
+    chat_id = call.from_user.id
+    movie_id = call.data.split(",")[1]
+    get_movie_info(chat_id, movie_id)
+
+
+@bot.callback_query_handler(lambda call: call.data.startswith("rent_movie"))
+def handler_rent_movie(call):
+    chat_id = call.from_user.id
+    movie_id = call.data.split(",")[1]
+    query = f"SELECT * FROM movies WHERE id = {movie_id};"
+    movie = pd.read_sql_query(query, conn)
+    rent_movie(chat_id, movie)
+
+
+@bot.callback_query_handler(lambda call: call.data.startswith("previous_button"))
+def handler_previous_button(call):
+    chat_id = call.from_user.id
+    message_id = call.message.message_id
+    data = pickle.load(open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "rb"))
+    is_first_page = data["page"] == 0
+    if is_first_page:
+        bot.answer_callback_query(call.id, "No puedes retroceder más")
+    else:
+        data["page"] -= 1
+        movies = data["movies"]
+        pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
+        show_movies(chat_id, movies, data["page"], message_id)
+    return
+
+
+@bot.callback_query_handler(lambda call: call.data.startswith("next_button"))
+def handler_next_button(call):
+    chat_id = call.from_user.id
+    message_id = call.message.message_id
+    data = pickle.load(open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "rb"))
+    is_last_page = data["page"] * N_RES_PAGE + N_RES_PAGE >= len(data["movies"])
+    if is_last_page:
+        bot.answer_callback_query(call.id, "No puedes avanzar más")
+    else:
+        data["page"] += 1
+        movies = data["movies"]
+        pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
+        show_movies(chat_id, movies, data["page"], message_id)
+    return
+
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     chat_id = call.from_user.id
-    message_id = call.message.message_id
-
-    if call.data.startswith("get_movie_info"):
-        movie_id = call.data.split(",")[1]
-        get_movie_info(chat_id, movie_id)
-    elif call.data.startswith("rent_movie"):
-        movie_id = call.data.split(",")[1]
-        query = f"SELECT * FROM movies WHERE id = {movie_id};"
-        movie = pd.read_sql_query(query, conn)
-        rent_movie(chat_id, movie)
-    elif call.data.startswith("remove_movie"):
+    if call.data.startswith("remove_movie"):
         remove_movie_from_my_rentals(call.data, chat_id)
     elif call.data.startswith("recommend_movie"):
         recommend_movie(call.data, chat_id)
@@ -492,28 +530,6 @@ def callback_handler(call):
     elif call.data.startswith("close"):
         message_id = call.data.split(",")[1]
         bot.delete_message(chat_id, message_id)
-        return
-    elif call.data.startswith("previous_button"):
-        data = pickle.load(open(f"{chat_id}_{message_id}.text", "rb"))
-        is_first_page = data["page"] == 0
-        if is_first_page:
-            bot.answer_callback_query(call.id, "No puedes retroceder más")
-        else:
-            data["page"] -= 1
-            movies = data["movies"]
-            pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
-            show_movies(chat_id, movies, data["page"], message_id)
-        return
-    elif call.data.startswith("next_button"):
-        data = pickle.load(open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "rb"))
-        is_last_page = data["page"] * N_RES_PAGE + N_RES_PAGE >= len(data["movies"])
-        if is_last_page:
-            bot.answer_callback_query(call.id, "No puedes avanzar más")
-        else:
-            data["page"] += 1
-            movies = data["movies"]
-            pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
-            show_movies(chat_id, movies, data["page"], message_id)
         return
     elif call.data.startswith("stop"):
         bot.stop_polling()
