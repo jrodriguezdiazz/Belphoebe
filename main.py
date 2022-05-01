@@ -521,6 +521,7 @@ def handler_next_button(call):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     chat_id = call.from_user.id
+    message_id = call.message.id
     if call.data.startswith("remove_movie"):
         remove_movie_from_my_rentals(call.data, chat_id)
     elif call.data.startswith("recommend_movie"):
@@ -528,7 +529,6 @@ def callback_handler(call):
     elif call.data.startswith("get_movie_info"):
         get_movie_info(chat_id, call.data.split(",")[1])
     elif call.data.startswith("close"):
-        message_id = call.data.split(",")[1]
         bot.delete_message(chat_id, message_id)
         return
     elif call.data.startswith("stop"):
