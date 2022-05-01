@@ -159,11 +159,14 @@ def start_ask(message):
 
 @bot.message_handler(commands=["rent"])
 def rent_movie(message):
-    markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    markup.add("Tarjeta de crédito", "Efectivo")
-    bot.send_chat_action(message.chat.id, "typing")
-    msg = bot.reply_to(message, "¿Cómo deseas pagar?", reply_markup=markup)
-    bot.register_next_step_handler(msg, ask_payment_method)
+    if check_if_user_has_rented_movies():
+        markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        markup.add("Tarjeta de crédito", "Efectivo")
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "¿Cómo deseas pagar?", reply_markup=markup)
+        bot.register_next_step_handler(msg, ask_payment_method)
+    else:
+        send_alert_message(message.chat.id, "No haz seleccionado ninguna película para rentar 🙇🏻‍♀️")
 
 
 @bot.message_handler(commands=["show"])
@@ -177,6 +180,10 @@ def check_my_rented_movies(message):
     else:
         bot.send_message(message.chat.id, "Estas son las películas que tienes alquiladas")
         show_my_rented_movies(message, movies)
+
+
+def check_if_user_has_rented_movies():
+    return len(movies_rented)
 
 
 def get_movie_price(movie_id):
