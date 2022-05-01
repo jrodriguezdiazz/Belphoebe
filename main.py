@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import random
 import os
 import random
@@ -15,6 +17,9 @@ import pickle
 from datetime import datetime
 from email.message import EmailMessage
 from dotenv import load_dotenv
+from sklearn.feature_extraction import text
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 
 MINUTES_TO_UNDO_THE_RENT = 5
@@ -41,15 +46,15 @@ conn = pyodbc.connect('Driver={SQL Server};'
                       'Trusted_Connection=yes;')
 cursor = conn.cursor()
 
-SALUDOS_INPUTS = (
+GREETINGS_INPUTS = (
     "hola", "buenas", "saludos", "qué tal", "hey", "buenos dias", "klk", "buenas tardes", "buenas noches", "dime a ver")
 
-SALUDOS_OUTPUTS = ["ROBOT: Hola", "ROBOT: Hola, ¿Qué tal?", "ROBOT Hola, ¿Cómo te puedo ayudar?",
-                   "ROBOT: Hola, encantado de hablar contigo", "ROBOT: Buenas, ¿Cómo le puedo servir?", "ROBOT: klk",
-                   "ROBOT: Dime a ver", "ROBOT: ¿En qué te puedo ayudar?"]
+GREETINGS_OUTPUTS = ["ROBOT: Hola", "ROBOT: Hola, ¿Qué tal?", "ROBOT Hola, ¿Cómo te puedo ayudar?",
+                     "ROBOT: Hola, encantado de hablar contigo", "ROBOT: Buenas, ¿Cómo le puedo servir?", "ROBOT: klk",
+                     "ROBOT: Dime a ver", "ROBOT: ¿En qué te puedo ayudar?"]
 
-DESPEDIDA_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: De nada", "ROBOT: Le estaré esperando",
-                     "ROBOT: Vuelva pronto"]
+GOODBYE_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: De nada", "ROBOT: Le estaré esperando",
+                   "ROBOT: Vuelva pronto"]
 
 total_price = 0
 movies_rented = []
@@ -88,38 +93,69 @@ def get_user_data(chat_id):
     return user
 
 
-def get_lemer_tokens():
-    file = open(r'store.txt', 'r', errors='ignore')
-    raw = file.read()
-    raw = raw.lower()
-    sent_tokens = nltk.sent_tokenize(raw)
-    word_tokens = nltk.word_tokenize(raw)
-    lemmer = nltk.stem.WordNetLemmatizer()
-    return lemmer
+file = open(r'corpus.txt', 'r', errors='ignore', encoding='utf-8')
+raw = file.read()
+raw = raw.lower()
+sent_tokens = nltk.sent_tokenize(raw)
+word_tokens = nltk.word_tokenize(raw)
+lemmer = nltk.stem.WordNetLemmatizer()
 
 
-def lem_tokens(tokens):
-    lemmer = get_lemer_tokens()
+def LemTokens(tokens):
     return [lemmer.lemmatize(token) for token in tokens]
 
 
-def lem_normalize(text):
-    remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
-    return lem_tokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
+remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
 
 
-def saludos(sentence):
-    for word in sentence.split():
-        if word.lower() in SALUDOS_INPUTS:
-            return random.choice(SALUDOS_OUTPUTS)
+def LemNormalize(text):
+    return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
+
+
+def response_user(user_message):
+    from nltk.corpus import stopwords
+    bot_response = ''
+    sent_tokens.append(user_message)
+    # stop_words = [word.encode("utf-8") for word in ]
+    TfidfVec = TfidfVectorizer(tokenizer=LemNormalize, stop_words=stopwords.words('spanish'))
+    tfidf = TfidfVec.fit_transform(sent_tokens)
+    vals = cosine_similarity(tfidf[-1], tfidf)
+    idx = vals.argsort()[0][-2]
+    flat = vals.flatten()
+    flat.sort()
+    req_tfidf = flat[-2]
+    if req_tfidf == 0:
+        bot_response = bot_response + "Lo siento, pero no comprendo lo que me quieres decir.\n¿Podrías tratar de " \
+                                      "decírmelo de otra forma, por favor? 🙇🏻‍♀️ "
+        return bot_response
+    else:
+        bot_response = bot_response + sent_tokens[idx]
+        return bot_response.capitalize()
+
+
+def get_greeting_message():
+    return random.choice(GREETINGS_OUTPUTS)
+
+
+def get_goodbye_message():
+    return random.choice(GOODBYE_OUTPUTS)
 
 
 @bot.message_handler(["start"])
 def send_message(message):
     reset_global_variables()
+    greeting_message = get_greeting_message()
     bot.send_chat_action(message.chat.id, "typing")
-    greeting = '¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️'
+    greeting = f'{greeting_message}  🙋🏻‍♀️'
     bot.reply_to(message, greeting)
+
+
+@bot.message_handler(commands=['exit'])
+def send_exit(message):
+    goodbye_message = get_goodbye_message()
+    bot.send_chat_action(message.chat.id, "typing")
+    bot.reply_to(message, f'{goodbye_message} 🙋🏻‍♀️')
+    bot.leave_chat(message.chat.id)
 
 
 @bot.message_handler(commands=['help'])
@@ -203,6 +239,15 @@ def cancel_all_rented_movies(message):
                                             "/recommend")
 
 
+@bot.message_handler(content_types=["text"])
+def manage_text(message):
+    response = response_user(message.text)
+    sent_tokens.remove(message.text)
+    if response is not None:
+        bot.send_message(message.chat.id, response)
+    else:
+        bot.send_message(message.chat.id, "Lo siento, no he entendido tu mensaje.\nPor favor, inténtalo de nuevo.")
+
 def cancel_all_rented_movies_confirmation(message):
     if message.text == "✅ Si":
         bot.send_chat_action(message.chat.id, "typing")
@@ -280,7 +325,6 @@ def get_time_left(invoice_id):
 def show_my_rented_movies(message, pending_movies_rented):
     bot.send_chat_action(message.chat.id, "typing")
     for index, movie in pending_movies_rented.iterrows():
-        movie_title = movie["title"]
         movie_id = movie["movie_id"]
         invoice_id = movie["id"]
         time_left = get_time_left(invoice_id)

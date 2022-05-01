@@ -1,0 +1,66 @@
+Para que te recomendemos películas según tus gustos debes de usar el comando /recommend.
+
+Para que te indiquemos películas según tus gustos debes de usar el comando /recommend.
+
+Para qué te sugerimos películas según tus gustos debes de usar el comando /recommend.
+
+Para poder cancelar o devolver las películas que has rentado debes de usar el comando /cancel.
+
+Si deseas anular tu renta de películas debes de usar el comando /cancel.
+
+Si deseas abolir tu renta de películas debes de usar el comando /cancel.
+
+Si deseas suprimir tu renta de películas debes de usar el comando /cancel.
+
+Si deseas rescindir tu renta de películas debes de usar el comando /cancel.
+
+Si deseas revocar tu renta de películas debes de usar el comando /cancel.
+
+Si deseas derogar tu renta de películas debes de usar el comando /cancel.
+
+Si deseas archivar tu renta de películas debes de usar el comando /cancel.
+
+Para ver el estado de las películas que has rentado debes de usar el comando /show.
+
+Para registrarte debes de usar el comando /register.
+
+Si necesitas ayuda o estás confundido puedes usar el comando /help.
+
+Si necesitas ser auxiliado o estás confundido puedes usar el comando /help.
+
+Si necesitas ser apoyado o estás confundido puedes usar el comando /help.
+
+Si necesitas ser socorrido o estás confundido puedes usar el comando /help.
+
+Si necesitas cooperación o estás confundido puedes usar el comando /help.
+
+Si necesitas asistencia o estás confundido puedes usar el comando /help.
+
+Si necesitas servicio o estás confundido puedes usar el comando /help.
+
+Para confirmar tu pedido debes de usar el comando /rent.
+
+Para autorizar tu pedido debes de usar el comando /rent.
+
+Para comprobar tu pedido debes de usar el comando /rent.
+
+Para asegurar tu pedido debes de usar el comando /rent.
+
+Para afirmar tu pedido debes de usar el comando /rent.
+
+Para salir del bot debes de usar el comando /exit.
+
+Para terminar la sesión conmigo debes de usar el comando /exit.
+
+Para acabar la sesión conmigo debes de usar el comando /exit.
+
+Para rematar la sesión conmigo debes de usar el comando /exit.
+
+Para concluir la sesión conmigo debes de usar el comando /exit.
+
+Para finalizar la sesión conmigo debes de usar el comando /exit.
+
+Para ultimar la sesión conmigo debes de usar el comando /exit.
+
+Para completar la sesión conmigo debes de usar el comando /exit.
+
