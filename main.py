@@ -16,6 +16,7 @@ from email.message import EmailMessage
 from dotenv import load_dotenv
 from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 
+MINUTES_TO_UNDO_THE_RENT = 5
 N_RES_PAGE = 5
 MAXIMUM_WIDTH_OF_BUTTONS = 8
 USER_DATA = {}
@@ -69,7 +70,7 @@ def send_email(chat_id):
     message['From'] = EMAIL_ADDERS
     message['To'] = user["email"]
     message.set_content(
-        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\nLuego de 5 minutos esta acción será irreversible.\n.")
+        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\nLuego de {MINUTES_TO_UNDO_THE_RENT} minutos esta acción será irreversible.\n.")
 
     server = smtplib.SMTP(email_smtp, email_port)
     server.starttls()
@@ -232,7 +233,7 @@ def get_time_left(invoice_id):
     query = f"SELECT date FROM rent WHERE id = '{invoice_id}';"
     date = pd.read_sql_query(query, conn)
     date = date.iloc[0]["date"]
-    time_left = 5 - ((datetime.now() - date).total_seconds() / 60.0)
+    time_left = MINUTES_TO_UNDO_THE_RENT - ((datetime.now() - date).total_seconds() / 60.0)
     return "{:.2f}".format(time_left)
 
 
@@ -293,8 +294,8 @@ def save_rent_movies(chat_id):
     query = f"INSERT INTO rent (id, chat_id, price_total) VALUES ('{rent_id}', {chat_id}, {int(total_price)});"
     cursor.execute(query)
     conn.commit()
-    time = 60 * 5
-    text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de 5 minutos esta " \
+    time = 60 * MINUTES_TO_UNDO_THE_RENT
+    text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de {MINUTES_TO_UNDO_THE_RENT} minutos esta " \
            f"acción será irreversible.\nPara poder deshacer la renta, por favor, utilize el siguiente comando " \
            f"/show "
     send_alert_message(chat_id, text)
@@ -555,8 +556,9 @@ def callback_handler(call):
 print("Welcome to the bot")
 bot.set_my_commands([
     telebot.types.BotCommand(command="/start", description="Inicia el chat con el bot"),
-    telebot.types.BotCommand(command="/help", description="Muestra esta ayuda"),
+    telebot.types.BotCommand(command="/help", description="Muestra la ayuda del bot"),
     telebot.types.BotCommand(command="/rent", description="Rentar una película"),
+    telebot.types.BotCommand(command="/show", description="Muestra las películas rentadas"),
     telebot.types.BotCommand(command="/cancel", description="Cancelar la renta de una película"),
     telebot.types.BotCommand(command="/cancel_all", description="Cancelar todas las películas rentadas"),
     telebot.types.BotCommand(command="/exit", description="Salir del chat con el bot")
