@@ -5,6 +5,7 @@ import string
 import smtplib
 import uuid
 import threading
+import re
 import nltk
 import pandas as pd
 import pyodbc
@@ -143,8 +144,6 @@ def send_recommend(message):
     if check_if_user_is_registered(message.chat.id):
         get_movies(message)
     else:
-        bot.send_chat_action(message.chat.id, "typing")
-        bot.reply_to(message, 'Para poder recomendar películas, primero debes registrarte.\n\n/register')
         register_user(message)
 
 
@@ -385,14 +384,28 @@ def ask_phone_number(message):
 
 
 def ask_email(message):
-    USER_DATA[message.chat.id]["email"] = message.text
-    markup = ReplyKeyboardMarkup()
-    text = f'Muchas Gracias {message.from_user.first_name} {message.from_user.last_name}\n A continuación te ' \
-           f'mostraremos nuestro catálogo de películas'
-    bot.send_chat_action(message.chat.id, "typing")
-    msg = bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="HTML")
-    save_user_data(message.chat.id)
-    get_movies(msg)
+    email = message.text
+    if is_valid_email(email):
+        USER_DATA[message.chat.id]["email"] = message.text
+        markup = ReplyKeyboardMarkup()
+        text = f'Muchas Gracias {message.from_user.first_name} {message.from_user.last_name}\n A continuación te ' \
+               f'mostraremos nuestro catálogo de películas'
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="HTML")
+        save_user_data(message.chat.id)
+        get_movies(msg)
+    else:
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "Por favor, ingresa un correo electrónico válido.")
+        bot.register_next_step_handler(msg, ask_email)
+
+
+def is_valid_email(email):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    if re.match(regex, email):
+        return True
+    else:
+        return False
 
 
 def save_user_data(chat_id):
