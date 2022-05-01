@@ -48,6 +48,30 @@ Para asegurar tu pedido debes de usar el comando /rent.
 
 Para afirmar tu pedido debes de usar el comando /rent.
 
+Para buscar películas por nombre debes de utilizar el comando /search.
+
+Para rebuscar películas por nombre debes de utilizar el comando /search.
+
+Para investigar películas por nombre debes de utilizar el comando /search.
+
+Para averiguar películas por nombre debes de utilizar el comando /search.
+
+Para examinar películas por nombre debes de utilizar el comando /search.
+
+Para explorar películas por nombre debes de utilizar el comando /search.
+
+Para buscar películas por fecha de estreno debes de utilizar el comando /search.
+
+Para rebuscar películas por fecha de estreno debes de utilizar el comando /search.
+
+Para investigar películas por fecha de estreno debes de utilizar el comando /search.
+
+Para averiguar películas por fecha de estreno debes de utilizar el comando /search.
+
+Para examinar películas por fecha de estreno debes de utilizar el comando /search.
+
+Para explorar películas por fecha de estreno debes de utilizar el comando /search.
+
 Para salir del bot debes de usar el comando /exit.
 
 Para terminar la sesión conmigo debes de usar el comando /exit.

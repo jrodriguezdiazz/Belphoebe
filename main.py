@@ -168,6 +168,7 @@ def send_help(message):
     /help - Muestra esta ayuda
     /recommend - Recomienda película en base a tus gustos
     /register - Registra tu correo electrónico y número telefónico en el sistema
+    /search - Busca películas según por nombre o año de estreno
     /rent - Rentar una película
     /show - Mostrar las películas rentadas
     /cancel - Cancelar todas las películas rentadas
@@ -239,6 +240,65 @@ def cancel_all_rented_movies(message):
                                             "/recommend")
 
 
+@bot.message_handler(commands=["search"])
+def search_movie(message):
+    if check_if_user_is_registered(message.chat.id):
+        markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        markup.add("🎬 Título", "🗓️ Año de estreno")
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "¿Qué deseas buscar?", reply_markup=markup)
+        bot.register_next_step_handler(msg, search_movie_by_title_or_genre_or_release_date)
+    else:
+        markup = ForceReply()
+        text = "Para realizar búsquedas de películas en nuestro sistema debe de proporcionarnos algunos datos " \
+               "personales.\n\n¿Cuál es tu número telefónico?"
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, text, reply_markup=markup)
+        bot.register_next_step_handler(msg, ask_phone_number)
+
+
+def search_movie_by_title_or_genre_or_release_date(message):
+    if message.text == "🎬 Título":
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "¿Qué título deseas buscar?")
+        bot.register_next_step_handler(msg, search_movie_by_title)
+    elif message.text == "🗓️ Año de estreno":
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "¿Qué fecha de estreno deseas buscar?")
+        bot.register_next_step_handler(msg, search_movie_by_release_date)
+    else:
+        bot.send_chat_action(message.chat.id, "typing")
+        msg = bot.reply_to(message, "Por favor, ingresa un opción válido.\n🎬 Título\n🗓️ Año de estreno")
+        bot.register_next_step_handler(msg, search_movie_by_title_or_genre_or_release_date)
+
+
+def search_movie_by_title(message):
+    bot.send_chat_action(message.chat.id, "typing")
+    query = f"SELECT * FROM view_movies_by_title('{message.text}');"
+    movies = pd.read_sql_query(query, conn)
+    if movies.empty:
+        send_alert_message(message.chat.id, "No se han encontrado resultados 🙇🏻‍♀️")
+    else:
+        show_movies(message.chat.id, movies)
+
+
+def search_movie_by_release_date(message):
+    year = message.text
+    bot.send_chat_action(message.chat.id, "typing")
+    if is_validate_year(year):
+        start_date = f"{year}-01-01"
+        end_date = f"{year}-12-31"
+        query = f"SELECT * FROM view_movies_by_release_date('{start_date}', '{end_date}');"
+        movies = pd.read_sql_query(query, conn)
+        if movies.empty:
+            send_alert_message(message.chat.id, "No se han encontrado resultados 🙇🏻‍♀️")
+        else:
+            show_movies(message.chat.id, movies)
+    else:
+        msg = bot.reply_to(message, "Por favor, ingresa un año válido.\nEjemplo: Entre 1916 y 2017")
+        bot.register_next_step_handler(msg, search_movie_by_release_date)
+
+
 @bot.message_handler(content_types=["text"])
 def manage_text(message):
     response = response_user(message.text)
@@ -247,6 +307,15 @@ def manage_text(message):
         bot.send_message(message.chat.id, response)
     else:
         bot.send_message(message.chat.id, "Lo siento, no he entendido tu mensaje.\nPor favor, inténtalo de nuevo.")
+
+
+def is_validate_year(year):
+    if year.isdigit():
+        if 1916 <= int(year) <= 2017:
+            return True
+        else:
+            return False
+
 
 def cancel_all_rented_movies_confirmation(message):
     if message.text == "✅ Si":
@@ -674,6 +743,8 @@ bot.set_my_commands([
     telebot.types.BotCommand(command="/start", description="Inicia el chat con el bot"),
     telebot.types.BotCommand(command="/help", description="Muestra la ayuda del bot"),
     telebot.types.BotCommand(command="/recommend", description="Recomienda película en base a tus gustos"),
+    telebot.types.BotCommand(command="/search",
+                             description="Busca películas según por nombre o año de estreno"),
     telebot.types.BotCommand(command="/register",
                              description="Registra tu correo electrónico y número telefónico en el sistema"),
     telebot.types.BotCommand(command="/rent", description="Rentar una película"),
