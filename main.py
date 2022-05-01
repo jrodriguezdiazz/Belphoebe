@@ -41,7 +41,7 @@ SALUDOS_OUTPUTS = ["ROBOT: Hola", "ROBOT: Hola, ¿Qué tal?", "ROBOT Hola, ¿Có
 DESPEDIDA_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: De nada", "ROBOT: Le estaré esperando",
                      "ROBOT: Vuelva pronto"]
 
-total_price = 0;
+total_price = 0
 movies_rented = []
 
 
@@ -180,8 +180,8 @@ def send_alert_message(chat_id, text):
     bot.send_message(chat_id, text)
 
 
-def remove_movie_from_my_rentals(data):
-    function_name, chat_id, invoice_id, movie_id = data.split(",")
+def remove_movie_from_my_rentals(data, chat_id):
+    function_name, invoice_id, movie_id = data.split(",")
     movie_price = get_movie_price(movie_id)
     query = f"DELETE FROM rent_details WHERE invoice_id = '{invoice_id}' AND movie_id = {movie_id};"
     conn.execute(query)
@@ -209,7 +209,7 @@ def show_my_rented_movies(message, pending_movies_rented):
         text += create_message_movie_info(movie)
         cancel_rent_button = InlineKeyboardButton(
             text=f'¿Deseas eliminar la película {movie_title} de tus rentas pendientes?',
-            callback_data=f'remove_movie,{message.chat.id},{invoice_id},{movie_id}')
+            callback_data=f'remove_movie,{invoice_id},{movie_id}')
         reply_markup = InlineKeyboardMarkup(
             [[cancel_rent_button]]
         )
@@ -368,7 +368,7 @@ def get_movies(message):
         text = f'Información sobre {row["title"]}: \n'
         text += f'<b>Precio: ${row["price"]}</b>\n'
         button = InlineKeyboardButton(text=f'🎥 Ver detalles de {row["title"]} ',
-                                      callback_data=f'get_movie_info,{message.chat.id},{row["id"]}')
+                                      callback_data=f'get_movie_info,{row["id"]}')
         reply_markup = InlineKeyboardMarkup(
             [[button]]
         )
@@ -381,13 +381,10 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     movie = pd.read_sql_query(query, conn)
     movie = movie.iloc[0]
     text = create_message_movie_info(movie)
-
-    # image = get_movie_photo(movie["title"])
-    # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
-
-    rent_movie_button = InlineKeyboardButton(text=f'🛒 Rentar película ', callback_data=f'rent_movie,{movie["id"]}')
+    movie_id = movie["id"]
+    rent_movie_button = InlineKeyboardButton(text=f'🛒 Rentar película ', callback_data=f'rent_movie,{movie_id}')
     recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recomendar película ',
-                                                  callback_data=f'recommend_movie,{movie["id"]}')
+                                                  callback_data=f'recommend_movie,{movie_id}')
     if show_recommend_button:
         reply_markup = InlineKeyboardMarkup(
             [[rent_movie_button, recommend_movie_button]]
@@ -396,6 +393,8 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
         reply_markup = InlineKeyboardMarkup(
             [[rent_movie_button]]
         )
+    # image = get_movie_photo(movie["title"])
+    # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
@@ -448,16 +447,16 @@ def recommend_movie(data, chat_id):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     chat_id = call.from_user.id
-    message_id = call.message.id
     if call.data.startswith("get_movie_info"):
-        get_movie_info(call.data.split(",")[1], call.data.split(",")[2])
+        movie_id = call.data.split(",")[1]
+        get_movie_info(chat_id, movie_id)
     elif call.data.startswith("rent_movie"):
         movie_id = call.data.split(",")[1]
-        query = "SELECT * FROM movies WHERE id = {id};".format(id=movie_id)
+        query = f"SELECT * FROM movies WHERE id = {movie_id};"
         movie = pd.read_sql_query(query, conn)
         rent_movie(chat_id, movie)
     elif call.data.startswith("remove_movie"):
-        remove_movie_from_my_rentals(call.data)
+        remove_movie_from_my_rentals(call.data, chat_id)
     elif call.data.startswith("recommend_movie"):
         recommend_movie(call.data, chat_id)
 
