@@ -19,6 +19,11 @@ from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton,
 N_RES_PAGE = 5
 MAXIMUM_WIDTH_OF_BUTTONS = 8
 USER_DATA = {}
+SEARCH_HISTORY_FOLDER = "./search_history/"
+
+if not os.path.exists(SEARCH_HISTORY_FOLDER):
+    os.makedirs(SEARCH_HISTORY_FOLDER)
+
 load_dotenv()
 BOT_KEY = os.getenv('BOT_KEY')
 IMDB_API_KEY = os.getenv('IMDB_API_KEY')
@@ -462,7 +467,7 @@ def show_movies(chat_id, movies, page=0, message_id=None):
                                     disable_web_page_preview=True)
         message_id = response.message_id
         data = {"page": 0, "movies": movies}
-        pickle.dump(data, open(f"{chat_id}_{message_id}.text", "wb"))
+        pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -496,18 +501,18 @@ def callback_handler(call):
         else:
             data["page"] -= 1
             movies = data["movies"]
-            pickle.dump(data, open(f"{chat_id}_{message_id}.text", "wb"))
+            pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
             show_movies(chat_id, movies, data["page"], message_id)
         return
     elif call.data.startswith("next_button"):
-        data = pickle.load(open(f"{chat_id}_{message_id}.text", "rb"))
+        data = pickle.load(open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "rb"))
         is_last_page = data["page"] * N_RES_PAGE + N_RES_PAGE >= len(data["movies"])
         if is_last_page:
             bot.answer_callback_query(call.id, "No puedes avanzar más")
         else:
             data["page"] += 1
             movies = data["movies"]
-            pickle.dump(data, open(f"{chat_id}_{message_id}.text", "wb"))
+            pickle.dump(data, open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "wb"))
             show_movies(chat_id, movies, data["page"], message_id)
         return
     elif call.data.startswith("stop"):
