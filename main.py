@@ -10,11 +10,14 @@ import pandas as pd
 import pyodbc
 import requests
 import telebot
+import pickle
 from datetime import datetime
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
 
+N_RES_PAGE = 5
+MAXIMUM_WIDTH_OF_BUTTONS = 8
 USER_DATA = {}
 load_dotenv()
 BOT_KEY = os.getenv('BOT_KEY')
@@ -217,17 +220,20 @@ def show_my_rented_movies(message, pending_movies_rented):
         bot.send_message(message.chat.id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
-def create_message_movie_info(movie):
-    text = f'Información sobre {movie["title"]}: \n'
+def create_message_movie_info(movie, index=None, with_overview=True):
+    if index is None:
+        text = f'{movie["title"]}: \n'
+    else:
+        text = f'{index} - {movie["title"]}: \n'
+    if with_overview:
+        text += f'{movie["overview"][0:300]}...\n'
     text += f'<b>Título original: {movie["original_title"]}</b>\n'
     text += f'<b>Precio: ${movie["price"]}</b>\n'
     text += f'<b>Fecha de estreno:</b> {movie["release_date"]}\n'
     text += f'<b>Puntuación IMDB:</b> {round(movie["vote_average"], 1)}\n'
-    text += f'<b>Sinopsis:</b>\n'
-    text += f'{movie["overview"][0:100]}...\n'
     if movie["homepage"] is not None:
-        text += f'<b>Página Web:</b> <a href="{movie["homepage"]}">Ver página web</a>'
-    return text
+        text += f'<b>Página Web:</b> <a href="{movie["homepage"]}">{movie["homepage"]}</a>'
+    return text + "\n\n"
 
 
 @bot.message_handler(commands=["check_my_rented_movies"])
@@ -361,19 +367,9 @@ def get_movie_photo(title):
 
 
 def get_movies(message):
-    top = random.randint(3, 6)
-    query = f"SELECT TOP {top} * FROM movies ORDER BY release_date DESC;"
+    query = f"SELECT TOP 100 * FROM movies ORDER BY release_date DESC;"
     movies = pd.read_sql_query(query, conn)
-    for index, row in movies.iterrows():
-        text = f'Información sobre {row["title"]}: \n'
-        text += f'<b>Precio: ${row["price"]}</b>\n'
-        button = InlineKeyboardButton(text=f'🎥 Ver detalles de {row["title"]} ',
-                                      callback_data=f'get_movie_info,{row["id"]}')
-        reply_markup = InlineKeyboardMarkup(
-            [[button]]
-        )
-        bot.send_chat_action(message.chat.id, "typing")
-        bot.send_message(message.chat.id, text, parse_mode="HTML", reply_markup=reply_markup)
+    show_movies(message.chat.id, movies)
 
 
 def get_movie_info(chat_id, movie_id, show_recommend_button=True):
@@ -383,7 +379,7 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     text = create_message_movie_info(movie)
     movie_id = movie["id"]
     rent_movie_button = InlineKeyboardButton(text=f'🛒 Rentar película ', callback_data=f'rent_movie,{movie_id}')
-    recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recomendar película ',
+    recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recomendar película',
                                                   callback_data=f'recommend_movie,{movie_id}')
     if show_recommend_button:
         reply_markup = InlineKeyboardMarkup(
@@ -393,9 +389,9 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
         reply_markup = InlineKeyboardMarkup(
             [[rent_movie_button]]
         )
-    # image = get_movie_photo(movie["title"])
-    # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML")
     bot.send_chat_action(chat_id, "typing")
+    # image = get_movie_photo(movie["title"])
+    # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML", reply_markup=reply_markup)
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
@@ -432,7 +428,6 @@ def get_movie(data):
     movie_id, chat_id = data.split(",")
     query = "SELECT * FROM movies WHERE id = {id};".format(id=movie_id)
     movie = pd.read_sql_query(query, conn)
-
     rent_movie(chat_id, movie)
 
 
@@ -444,9 +439,37 @@ def recommend_movie(data, chat_id):
         get_movie_info(chat_id, row["id"], show_recommend_button=False)
 
 
+def show_movies(chat_id, movies, page=0, message_id=None):
+    markup = InlineKeyboardMarkup(row_width=MAXIMUM_WIDTH_OF_BUTTONS)
+    previous_button = InlineKeyboardButton(text="⬅️", callback_data=f"previous_button,{page}")
+    next_button = InlineKeyboardButton(text="➡️", callback_data=f"next_button,{page}")
+    close_button = InlineKeyboardButton(text="❌", callback_data=f"close_button,{page}")
+
+    start = page * N_RES_PAGE
+    end = start + N_RES_PAGE
+    text = f"<i><b>Página {start + 1} - {end} de {len(movies)}</b></i>\n\n"
+    buttons = []
+    for index, movie in movies[start:end].iterrows():
+        buttons.append(InlineKeyboardButton(text=str(index + 1), callback_data=f"get_movie_info,{movie['id']}"))
+        text += create_message_movie_info(movie, index + 1, with_overview=False)
+    markup.add(*buttons)
+    markup.row(previous_button, close_button, next_button)
+    if message_id:
+        bot.edit_message_text(text, chat_id, message_id, parse_mode="HTML", reply_markup=markup,
+                              disable_web_page_preview=True)
+    else:
+        response = bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=markup,
+                                    disable_web_page_preview=True)
+        message_id = response.message_id
+        data = {"page": 0, "movies": movies}
+        pickle.dump(data, open(f"{chat_id}_{message_id}.text", "wb"))
+
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
     chat_id = call.from_user.id
+    message_id = call.message.message_id
+
     if call.data.startswith("get_movie_info"):
         movie_id = call.data.split(",")[1]
         get_movie_info(chat_id, movie_id)
@@ -459,6 +482,36 @@ def callback_handler(call):
         remove_movie_from_my_rentals(call.data, chat_id)
     elif call.data.startswith("recommend_movie"):
         recommend_movie(call.data, chat_id)
+    elif call.data.startswith("get_movie_info"):
+        get_movie_info(chat_id, call.data.split(",")[1])
+    elif call.data.startswith("close"):
+        message_id = call.data.split(",")[1]
+        bot.delete_message(chat_id, message_id)
+        return
+    elif call.data.startswith("previous_button"):
+        data = pickle.load(open(f"{chat_id}_{message_id}.text", "rb"))
+        is_first_page = data["page"] == 0
+        if is_first_page:
+            bot.answer_callback_query(call.id, "No puedes retroceder más")
+        else:
+            data["page"] -= 1
+            movies = data["movies"]
+            pickle.dump(data, open(f"{chat_id}_{message_id}.text", "wb"))
+            show_movies(chat_id, movies, data["page"], message_id)
+        return
+    elif call.data.startswith("next_button"):
+        data = pickle.load(open(f"{chat_id}_{message_id}.text", "rb"))
+        is_last_page = data["page"] * N_RES_PAGE + N_RES_PAGE >= len(data["movies"])
+        if is_last_page:
+            bot.answer_callback_query(call.id, "No puedes avanzar más")
+        else:
+            data["page"] += 1
+            movies = data["movies"]
+            pickle.dump(data, open(f"{chat_id}_{message_id}.text", "wb"))
+            show_movies(chat_id, movies, data["page"], message_id)
+        return
+    elif call.data.startswith("stop"):
+        bot.stop_polling()
 
 
 print("Welcome to the bot")
