@@ -1,7 +1,7 @@
 import random
 import json
 import torch
-
+import pyodbc
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
 
@@ -26,8 +26,34 @@ model.eval()
 
 bot_name = "Belphoebe"
 
+conn = pyodbc.connect('Driver={SQL Server};'
+                      'Server=JRODRIGUEZDIAZZ\SQLEXPRESS;'
+                      'Database=store;'
+                      'Trusted_Connection=yes;')
+
+
+def get_movies():
+    cursor = conn.cursor()
+    cursor.execute("SELECT TOP 4 title FROM movies")
+    rows = cursor.fetchall()
+    movies = ""
+    for row in rows:
+        movies += row[0] + ", "
+    return movies[:-2]
+
+
+def handler_commands(command):
+    if command == "/recommend":
+        return "Te recomiendo: " + get_movies()
+    elif command == "/help":
+        return "Puedo ayudarte a responder preguntas sobre el mundo de la programación"
+    else:
+        return "No te entiendo..."
+
 
 def get_response(msg):
+    if msg.startswith("/"):
+        return handler_commands(msg)
     sentence = tokenize(msg)
     X = bag_of_words(sentence, all_words)
     X = X.reshape(1, X.shape[0])
