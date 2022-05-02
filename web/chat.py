@@ -1,6 +1,5 @@
 import random
 import json
-
 import torch
 
 from model import NeuralNet
@@ -12,7 +11,7 @@ with open('intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
 FILE = "data.pth"
-data = torch.load(FILE)
+data = torch.load(FILE, encoding='utf8')
 
 input_size = data["input_size"]
 hidden_size = data["hidden_size"]
@@ -25,7 +24,7 @@ model = NeuralNet(input_size, hidden_size, output_size).to(device)
 model.load_state_dict(model_state)
 model.eval()
 
-bot_name = "Sam"
+bot_name = "Belphoebe"
 
 
 def get_response(msg):
@@ -45,8 +44,7 @@ def get_response(msg):
         for intent in intents['intents']:
             if tag == intent["tag"]:
                 return random.choice(intent['responses'])
-
-    return "I do not understand..."
+    return "No te entiendo..."
 
 
 if __name__ == "__main__":
