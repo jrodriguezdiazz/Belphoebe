@@ -48,12 +48,40 @@ cursor = conn.cursor()
 GREETINGS_INPUTS = (
     "hola", "buenas", "saludos", "qué tal", "hey", "buenos dias", "klk", "buenas tardes", "buenas noches", "dime a ver")
 
-GREETINGS_OUTPUTS = ["ROBOT: Hola", "ROBOT: Hola, ¿Qué tal?", "ROBOT Hola, ¿Cómo te puedo ayudar?",
-                     "ROBOT: Hola, encantado de hablar contigo", "ROBOT: Buenas, ¿Cómo le puedo servir?", "ROBOT: klk",
-                     "ROBOT: Dime a ver", "ROBOT: ¿En qué te puedo ayudar?"]
+GREETINGS_OUTPUTS = [
+    "Hola, si necesitas ayuda puedes usar el comando /help",
+    "Hola, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help",
+    "Hola, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help",
+    "Hola, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help",
+    "Buenas, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help",
+    "Dime a ver, si necesitas ayuda puedes usar el comando /help",
+    "¿En qué te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help",
+    "Hola, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Buenas, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Dime a ver, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "¿En qué te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help",
+    "Hola 🙋🏻‍♀️, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help",
+    "Hola 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help",
+    "Hola 🙋🏻‍♀️, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help",
+    "Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help",
+    "Dime a ver 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help",
+    "¿En qué te puedo ayudar? 🙋🏻‍♀️\nSi necesitas ayuda puedes usar el comando /help",
+    "Hola 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola 🙋🏻‍♀️, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Hola 🙋🏻‍♀️, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "Dime a ver 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
+    "¿En qué te puedo ayudar?🙋🏻‍♀️\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
 
-GOODBYE_OUTPUTS = ["ROBOT: No hay de qué", "ROBOT: Con mucho gusto", "ROBOT: De nada", "ROBOT: Le estaré esperando",
-                   "ROBOT: Vuelva pronto"]
+]
+
+GOODBYE_OUTPUTS = ["No hay de qué", "Con mucho gusto", "De nada", "Le estaré esperando",
+                   "Vuelva pronto"]
 
 total_price = 0
 movies_rented = []
