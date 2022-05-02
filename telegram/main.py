@@ -566,12 +566,16 @@ def check_if_user_is_registered(chat_id):
 
 
 def get_movie_photo(title):
-    url = "https://imdb-api.com/en/API/SearchMovie/{IMDB_API_KEY}/{title}".format(IMDB_API_KEY=IMDB_API_KEY,
-                                                                                  title=title)
-    response = requests.get(url)
-    data = response.json()
-    image = data["results"][0]["image"]
-    return image
+    try:
+        url = "https://imdb-api.com/en/API/SearchMovie/{IMDB_API_KEY}/{title}".format(IMDB_API_KEY=IMDB_API_KEY,
+                                                                                      title=title)
+        response = requests.get(url)
+        data = response.json()
+        image = data["results"][0]["image"]
+        return image
+    except Exception as e:
+        print(e)
+        return None
 
 
 def get_movies(message):
@@ -599,7 +603,14 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
         )
     bot.send_chat_action(chat_id, "typing")
     # image = get_movie_photo(movie["title"])
-    # bot.send_photo(chat_id, image, caption=text, parse_mode="HTML", reply_markup=reply_markup)
+    # if image is not None:
+    #     try:
+    #         bot.send_photo(chat_id=chat_id, photo=image, caption=text, parse_mode="HTML", reply_markup=reply_markup)
+    #     except Exception as e:
+    #         print(e)
+    #         bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML", reply_markup=reply_markup)
+    # else:
+    #     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
     bot.send_message(chat_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
 
