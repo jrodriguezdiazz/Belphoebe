@@ -93,7 +93,7 @@ def get_user_data(chat_id):
     return user
 
 
-file = open(r'corpus.txt', 'r', errors='ignore', encoding='utf-8')
+file = open(r'../corpus.txt', 'r', errors='ignore', encoding='utf-8')
 raw = file.read()
 raw = raw.lower()
 sent_tokens = nltk.sent_tokenize(raw)
