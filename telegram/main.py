@@ -17,7 +17,7 @@ import pyodbc
 import requests
 import telebot
 from dotenv import load_dotenv
-from sklearn.feature_extraction import text
+from recommend import predict_movie
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from telebot.types import ReplyKeyboardMarkup, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup
@@ -675,9 +675,10 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     movie = movie.iloc[0]
     text = create_message_movie_info(movie)
     movie_id = movie["id"]
+    movie_title = movie["title"]
     rent_movie_button = InlineKeyboardButton(text=f'🛒 Rentar película ', callback_data=f'rent_movie,{movie_id}')
     recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recomendar película',
-                                                  callback_data=f'recommend_movie,{movie_id}')
+                                                  callback_data=f'recommend_movie,{movie_id},{movie_title}')
     if show_recommend_button:
         reply_markup = InlineKeyboardMarkup(
             [[rent_movie_button, recommend_movie_button]]
@@ -736,8 +737,13 @@ def get_movie(data):
 
 
 def recommend_movie(data, chat_id):
-    _, movie_id = data.split(",")
-    query = "SELECT TOP 4 id FROM movies ORDER BY popularity DESC;"
+    send_alert_message(chat_id, "🏃🏻‍♀️ Recomendando película...")
+    _, movie_id, movie_title = data.split(",")
+    movies = predict_movie(movie_title)
+    if len(movies) == 0:
+        send_alert_message(chat_id, "No se encontraron películas similares 😔")
+        return
+    query = "SELECT id FROM movies WHERE title IN ({})".format(",".join(["'{}'".format(movie) for movie in movies]))
     movies = pd.read_sql_query(query, conn)
     for index, row in movies.iterrows():
         get_movie_info(chat_id, row["id"], show_recommend_button=False)

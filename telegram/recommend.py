@@ -79,7 +79,7 @@ def similarity(movieId1, movieId2):
     return genreDistance + directDistance + scoreDistance + wordsDistance
 
 
-def predecir_puntaje(name):
+def predict_movie(name):
     new_movie = movies[movies['original_title'].str.contains(name)].iloc[0].to_frame().T
     print('Selected Movie: ', new_movie.original_title.values[0])
 
@@ -101,18 +101,15 @@ def predecir_puntaje(name):
     K = 10
     avgRating = 0
     neighbors = getNeighbors(new_movie, K)
-
-    print('\Peliculas recomendadas: \n')
+    result = []
     for neighbor in neighbors:
-        avgRating = avgRating + movies.iloc[neighbor[0]][2]
-        print(movies.iloc[neighbor[0]][0] + " | Generos: " + str(movies.iloc[neighbor[0]][1]).strip('[]').replace(' ',
-                                                                                                                  '') + " | Puntaje: " + str(
-            movies.iloc[neighbor[0]][2]))
-
-    print('\n')
-    avgRating = avgRating / K
-    print('Puntaje predecido %s es: %f' % (new_movie['original_title'].values[0], avgRating))
-    print('Puntaje real %s es %f' % (new_movie['original_title'].values[0], new_movie['vote_average']))
+        movie = movies.iloc[neighbor[0]][0].replace("'", "''")
+        result.append(movie)
+    return result
+    # print('\n')
+    # avgRating = avgRating / K
+    # print('Puntaje predecido %s es: %f' % (new_movie['original_title'].values[0], avgRating))
+    # print('Puntaje real %s es %f' % (new_movie['original_title'].values[0], new_movie['vote_average']))
 
 
 # -------------------------------------------------------- #
@@ -262,10 +259,7 @@ movies = movies[
      'words_bin']]
 print(movies.head()['new_id'])
 
-predecir_puntaje('Godfather')
-predecir_puntaje('Despicable Me')
-
-# G R A F I C A S 
+# G R A F I C A S
 # MUESTRA UNA GRAFICA DE LOS GENEROS MAS FAMOSOS
 # +---------------------------+
 # plt.subplots(figsize=(12,10))
