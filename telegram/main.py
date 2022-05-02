@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import random
 import os
+import pickle
 import random
-import string
-import smtplib
-import uuid
-import threading
 import re
+import smtplib
+import string
+import threading
+import uuid
+from datetime import datetime
+from email.message import EmailMessage
+
 import nltk
 import pandas as pd
 import pyodbc
 import requests
 import telebot
-import pickle
-from datetime import datetime
-from email.message import EmailMessage
 from dotenv import load_dotenv
 from sklearn.feature_extraction import text
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -39,7 +39,6 @@ EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 CHAT_ID = os.getenv('CHAT_ID')
 
 bot = telebot.TeleBot(BOT_KEY)
-message = EmailMessage()
 conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=JRODRIGUEZDIAZZ\SQLEXPRESS;'
                       'Database=store;'
@@ -68,11 +67,12 @@ def reset_global_variables():
 
 
 def send_email(chat_id):
+    message = EmailMessage()
     user = get_user_data(chat_id)
     global total_price
     email_smtp = "smtp.gmail.com"
     email_port = 587
-    message['Subject'] = "Confirmación de renta de películas"
+    message['Subject'] = "Belphoebe: Notificación renta de películas"
     message['From'] = EMAIL_ADDERS
     message['To'] = user["email"]
     message.set_content(
