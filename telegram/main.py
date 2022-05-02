@@ -80,8 +80,64 @@ GREETINGS_OUTPUTS = [
 
 ]
 
-GOODBYE_OUTPUTS = ["No hay de qué", "Con mucho gusto", "De nada", "Le estaré esperando",
-                   "Vuelva pronto"]
+GOODBYE_OUTPUTS = [
+    "Bye",
+    "Chao",
+    "Fue un placer",
+    "Hasta luego",
+    "No hay de qué",
+    "Con mucho gusto",
+    "De nada",
+    "Le estaré esperando",
+    "Vuelva pronto",
+    "Adiós",
+    "Nos vemos",
+    "Saludos a tu mamá y papá",
+    "Hasta pronto",
+    "Hasta siempre",
+    "Hasta luego",
+    "Hasta nunca",
+    "Hasta mañana",
+    "Hasta la otra semana",
+    "Hasta el próximo fin de semana",
+    "Te veo luego",
+    "¡Cuídate!",
+    "Nos estamos viendo",
+    "¡Nos vemos!",
+    "¡Por favor cuídate!",
+    "¡Te veo luego!",
+    "¡Hasta luego! ¡Qué te vaya bien!",
+    "Fue bueno verlo",
+    "¡Qué tengan una buen día!",
+    "💁🏻‍♀️Bye",
+    "💁🏻‍♀️Chao",
+    "💁🏻‍♀️Fue un placer",
+    "💁🏻‍♀️Hasta luego",
+    "💁🏻‍♀️No hay de qué",
+    "💁🏻‍♀️Con mucho gusto",
+    "💁🏻‍♀️De nada",
+    "💁🏻‍♀️Le estaré esperando",
+    "💁🏻‍♀️Vuelva pronto",
+    "💁🏻‍♀️Adiós",
+    "💁🏻‍♀️Nos vemos",
+    "💁🏻‍♀️Saludos a tu mamá y papá",
+    "💁🏻‍♀️Hasta pronto",
+    "💁🏻‍♀️Hasta siempre",
+    "💁🏻‍♀️Hasta luego",
+    "💁🏻‍♀️Hasta nunca",
+    "💁🏻‍♀️Hasta mañana",
+    "💁🏻‍♀️Hasta la otra semana",
+    "💁🏻‍♀️Hasta el próximo fin de semana",
+    "💁🏻‍♀️Te veo luego",
+    "💁🏻‍♀️¡Cuídate!",
+    "💁🏻‍♀️Nos estamos viendo",
+    "💁🏻‍♀️¡Nos vemos!",
+    "💁🏻‍♀️¡Por favor cuídate!",
+    "💁🏻‍♀️¡Te veo luego!",
+    "💁🏻‍♀️¡Hasta luego! ¡Qué te vaya bien!",
+    "💁🏻‍♀️Fue bueno verlo",
+    "💁🏻‍♀️¡Qué tengan una buen día!"
+]
 
 total_price = 0
 movies_rented = []
@@ -171,9 +227,9 @@ def get_goodbye_message():
 
 @bot.message_handler(["start"])
 def send_message(message):
+    bot.send_chat_action(message.chat.id, "typing")
     reset_global_variables()
     greeting_message = get_greeting_message()
-    bot.send_chat_action(message.chat.id, "typing")
     greeting = f'{greeting_message}  🙋🏻‍♀️'
     bot.reply_to(message, greeting)
 
@@ -183,7 +239,7 @@ def send_exit(message):
     goodbye_message = get_goodbye_message()
     bot.send_chat_action(message.chat.id, "typing")
     bot.reply_to(message, f'{goodbye_message} 🙋🏻‍♀️')
-    bot.leave_chat(message.chat.id)
+    reset_global_variables()
 
 
 @bot.message_handler(commands=['help'])
@@ -329,6 +385,7 @@ def search_movie_by_release_date(message):
 
 @bot.message_handler(content_types=["text"])
 def manage_text(message):
+    bot.send_chat_action(message.chat.id, "typing")
     response = response_user(message.text)
     sent_tokens.remove(message.text)
     if response is not None:
