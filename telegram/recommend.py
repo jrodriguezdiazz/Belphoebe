@@ -6,22 +6,6 @@ warnings.filterwarnings('ignore')
 from scipy import spatial
 import operator
 
-# Dependencias utilizadas para los graficos vv
-# import base64
-# import io
-# from matplotlib.pyplot import imread
-# import codecs
-# from IPython.display import HTML
-# from wordcloud import WordCloud, STOPWORDS
-# import nltk
-# from nltk.corpus import stopwords
-# import matplotlib.pyplot as plt
-# plt.style.use('fivethirtyeight')
-# import seaborn as sns
-# import numpy as np
-# nltk.download('stopwords')
-# nltk.download('punkt')
-
 
 movies = pd.read_csv('tmdb_5000_movies.csv')
 credits = pd.read_csv('tmdb_5000_credits.csv')
@@ -106,10 +90,7 @@ def predict_movie(name):
         movie = movies.iloc[neighbor[0]][0].replace("'", "''")
         result.append(movie)
     return result
-    # print('\n')
-    # avgRating = avgRating / K
-    # print('Puntaje predecido %s es: %f' % (new_movie['original_title'].values[0], avgRating))
-    # print('Puntaje real %s es %f' % (new_movie['original_title'].values[0], new_movie['vote_average']))
+
 
 
 # -------------------------------------------------------- #
@@ -259,60 +240,3 @@ movies = movies[
      'words_bin']]
 print(movies.head()['new_id'])
 
-# G R A F I C A S
-# MUESTRA UNA GRAFICA DE LOS GENEROS MAS FAMOSOS
-# +---------------------------+
-# plt.subplots(figsize=(12,10))
-# list1 = []
-# for i in movies['genres']:
-#     list1.extend(i)
-# ax = pd.Series(list1).value_counts()[:10].sort_values(ascending=True).plot.barh(width=0.9,color=sns.color_palette('hls',10))
-# for i, v in enumerate(pd.Series(list1).value_counts()[:10].sort_values(ascending=True).values): 
-#     ax.text(.8, i, v,fontsize=12,color='white',weight='bold')
-# plt.title('Generos mas famosos')
-# plt.show()
-# +---------------------------+
-
-# GRAFICO DE ACTORES QUE MAS APARECEN EN PELICULAS
-# +---------------------------+
-# plt.subplots(figsize=(12,10))
-# list1=[]
-# for i in movies['cast']:
-#     list1.extend(i)
-# ax=pd.Series(list1).value_counts()[:15].sort_values(ascending=True).plot.barh(width=0.9,color=sns.color_palette('muted',40))
-# for i, v in enumerate(pd.Series(list1).value_counts()[:15].sort_values(ascending=True).values): 
-#     ax.text(.8, i, v,fontsize=10,color='white',weight='bold')
-# plt.title('Actores con mayor cantidad de peliculas actuadas')
-# plt.show()
-# +---------------------------+
-
-# DIRECTORES CON MAS PELICULAS
-# +---------------------------+
-# plt.subplots(figsize=(12,10))
-# ax = movies[movies['director']!=''].director.value_counts()[:10].sort_values(ascending=True).plot.barh(width=0.9,color=sns.color_palette('muted',40))
-# for i, v in enumerate(movies[movies['director']!=''].director.value_counts()[:10].sort_values(ascending=True).values): 
-#     ax.text(.5, i, v,fontsize=12,color='white',weight='bold')
-# plt.title('Directores con mas peliculas')
-# plt.show()
-# +---------------------------+
-
-# NUBE DE PALABRAS MAS UTILIZADAS PARA DESCRIBIR LAS PELICULAs
-# +---------------------------+
-# plt.subplots(figsize=(12,12))
-# stop_words = set(stopwords.words('english'))
-# stop_words.update(',',';','!','?','.','(',')','$','#','+',':','...',' ','')
-
-# words=movies['keywords'].dropna().apply(nltk.word_tokenize)
-# word=[]
-# for i in words:
-#     word.extend(i)
-# word=pd.Series(word)
-# word=([i for i in word.str.lower() if i not in stop_words])
-# wc = WordCloud(background_color="black", max_words=2000, stopwords=STOPWORDS, max_font_size= 60,width=1000,height=1000)
-# wc.generate(" ".join(word))
-# plt.imshow(wc)
-# plt.axis('off')
-# fig=plt.gcf()
-# fig.set_size_inches(10,10)
-# plt.show()
-# +---------------------------+
