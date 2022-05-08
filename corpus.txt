@@ -1,379 +1,378 @@
-Buen día, si necesitas ayuda puedes usar el comando /help.
+Good morning, if you need help you can use the command /help.
 
-Buen día, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, how about? If you need help you can use the /help command.
 
-Buen día, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, how can I help you? If you need help you can use the /help command.
 
-Buen día, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, nice to talk to you. If you need help you can use the /help command.
 
-Buen día, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, how can I serve you? If you need help you can use the /help command.
 
-Dime a ver, si necesitas ayuda puedes usar el comando /help.
+Tell me to see, if you need help you can use the command /help.
 
-¿En qué te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+How can I help you? If you need help you can use the /help command.
 
-Buen día, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, if you want me to recommend some movies you can use the command /recommend.
 
-Buen día, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, how about? If you want me to recommend some movies you can use the command /recommend.
 
-Buen día, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, how can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Buen día, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, nice to talk to you. If you want me to recommend some movies you can use the command /recommend.
 
-Buen día, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, How can I serve? If you want me to recommend some movies you can use the command /recommend.
 
-Dime a ver, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Tell me to see, if you want me to recommend some movies you can use the command /recommend.
 
-¿En qué te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Buen día 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, if you need help you can use the /help command.
 
-Buen día 🙋🏻‍♀️, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, How about? If you need help you can use the /help command.
 
-Buen día 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, How can I help you? If you need help you can use the /help command.
 
-Buen día 🙋🏻‍♀️, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, glad to talk to you. If you need help you can use the /help command.
 
-Buen día 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, How can I serve? If you need help you can use the /help command.
 
-Dime a ver 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help.
+Tell me to see 🙋🏻‍♀️, if you need help you can use the /help command.
 
-¿En qué te puedo ayudar? 🙋🏻‍♀️\nSi necesitas ayuda puedes usar el comando /help.
+How can I help you? 🙋🏻‍♀️ If you need help you can use the /help command.
 
-Buen día 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend.
 
-Buen día 🙋🏻‍♀️, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, How about? If you want me to recommend some movies you can use the command /recommend.
 
-Buen día 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Buen día 🙋🏻‍♀️, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, nice to talk to you. If you want me to recommend some movies you can use the command /recommend.
 
-Buen día 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, How can I serve? If you want me to recommend some movies you can use the command /recommend.
 
-Dime a ver 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Tell me to watch 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend.
 
-¿En qué te puedo ayudar?🙋🏻‍♀️\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+How can I help you? 🙋🏻‍♀️ If you want me to recommend some movies you can use the /recommend command.
 
-Buenos días, si necesitas ayuda puedes usar el comando /help.
+Good morning, if you need help you can use the /help command.
 
-Buenos días, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, how about? If you need help you can use the /help command.
 
-Buenos días, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, how can I help you? If you need help you can use the /help command.
 
-Buenos días, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help.
+Good morning, nice to talk to you. If you need help you can use the /help command.
 
-Buenas, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help.
+Good, how can I serve you? If you need help you can use the /help command.
 
-Dime a ver, si necesitas ayuda puedes usar el comando /help.
+Tell me to see, if you need help you can use the command /help.
 
-¿En qué te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+How can I help you? If you need help you can use the /help command.
 
-Buenos días, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, if you want me to recommend some movies you can use the command /recommend.
 
-Buenos días, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, how about? If you want me to recommend some movies you can use the command /recommend.
 
-Buenos días, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, how can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Buenos días, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning, nice to talk to you. If you want me to recommend some movies you can use the command /recommend.
 
-Buenas, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good, How can I serve? If you want me to recommend some movies you can use the command /recommend.
 
-Dime a ver, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Tell me to see, if you want me to recommend some movies you can use the command /recommend.
 
-¿En qué te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Buenos días 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, if you need help you can use the /help command.
 
-Buenos días 🙋🏻‍♀️, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, How about? If you need help you can use the /help command.
 
-Buenos días 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, How can I help you? If you need help you can use the /help command.
 
-Buenos días 🙋🏻‍♀️, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help.
+Good morning 🙋🏻‍♀️, glad to talk to you. If you need help you can use the /help command.
 
-Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help.
+Good 🙋🏻‍♀️, How can I serve? If you need help you can use the /help command.
 
-Dime a ver 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help.
+Tell me to see 🙋🏻‍♀️, if you need help you can use the /help command.
 
-¿En qué te puedo ayudar? 🙋🏻‍♀️\nSi necesitas ayuda puedes usar el comando /help.
+How can I help you? 🙋🏻‍♀️ If you need help you can use the /help command.
 
-Buenos días 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend.
 
-Buenos días 🙋🏻‍♀️, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, How about? If you want me to recommend some movies you can use the command /recommend.
 
-Buenos días 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Buenos días 🙋🏻‍♀️, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good morning 🙋🏻‍♀️, nice to talk to you. If you want me to recommend some movies you can use the command /recommend.
 
-Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good 🙋🏻‍♀️, How can I serve? If you want me to recommend some movies you can use the command /recommend.
 
-Dime a ver 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Tell me to watch 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend.
 
-¿En qué te puedo ayudar?🙋🏻‍♀️\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+How can I help you? 🙋🏻‍♀️ If you want me to recommend some movies you can use the /recommend command.
 
-Hola, si necesitas ayuda puedes usar el comando /help.
+Hello, if you need help you can use the command /help.
 
-Hola, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help.
+Hi, How about? If you need help you can use the /help command.
 
-Hola, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+Hello, How can I help you? If you need help you can use the /help command.
 
-Hola, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help.
+Hello, nice to talk to you. If you need help you can use the /help command.
 
-Buenas, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help.
+Good, how can I serve you? If you need help you can use the /help command.
 
-Dime a ver, si necesitas ayuda puedes usar el comando /help.
+Tell me to see, if you need help you can use the command /help.
 
-¿En qué te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+How can I help you? If you need help you can use the /help command.
 
-Hola, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello, if you want me to recommend some movies you can use the command /recommend.
 
-Hola, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hi, How about? If you want me to recommend some movies you can use the command /recommend.
 
-Hola, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello, How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Hola, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello, nice to talk to you. If you want me to recommend some movies you can use the command /recommend.
 
-Buenas, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good, How can I serve? If you want me to recommend some movies you can use the command /recommend.
 
-Dime a ver, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Tell me to see, if you want me to recommend some movies you can use the command /recommend.
 
-¿En qué te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Hola 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help.
+Hello 🙋🏻‍♀️, if you need help you can use the /help command.
 
-Hola 🙋🏻‍♀️, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help.
+Hello 🙋🏻‍♀️, How about? If you need help you can use the /help command.
 
-Hola 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help.
+Hello 🙋🏻‍♀️, How can I help you? If you need help you can use the /help command.
 
-Hola 🙋🏻‍♀️, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help.
+Hello 🙋🏻‍♀️, nice to talk to you. If you need help you can use the /help command.
 
-Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help.
+Good 🙋🏻‍♀️, How can I serve? If you need help you can use the /help command.
 
-Dime a ver 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help.
+Tell me to see 🙋🏻‍♀️, if you need help you can use the /help command.
 
-¿En qué te puedo ayudar? 🙋🏻‍♀️\nSi necesitas ayuda puedes usar el comando /help.
+How can I help you? 🙋🏻‍♀️ If you need help you can use the /help command.
 
-Hola 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend.
 
-Hola 🙋🏻‍♀️, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello 🙋🏻‍♀️, How about? If you want me to recommend some movies you can use the command /recommend.
 
-Hola 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello 🙋🏻‍♀️, How can I help you? If you want me to recommend some movies you can use the command /recommend.
 
-Hola 🙋🏻‍♀️, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Hello 🙋🏻‍♀️, nice to talk to you. If you want me to recommend some movies you can use the command /recommend.
 
-Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Good 🙋🏻‍♀️, How can I serve? If you want me to recommend some movies you can use the command /recommend.
 
-Dime a ver 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend.
+Tell me to watch 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend.
 
-¿En qué te puedo ayudar?🙋🏻‍♀️\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend.
+How can I help you? 🙋🏻‍♀️ If you want me to recommend some movies you can use the /recommend command.
 
-Bye, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Bye, one more detail, to end the interaction  with me, please use the /exit command.
 
-Chao, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Chao, one more detail, to end the interaction  with me, please use the /exit command.
 
-Fue un placer, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+It was a pleasure, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta luego, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until then, one more detail, to end the interaction  with me, please use the /exit command.
 
-No hay de qué, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Not at all, one more detail, to end the interaction  with me, please use the /exit command.
 
-Con mucho gusto, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+With pleasure, one more detail, to end the interaction  with me, please use the /exit command.
 
-De nada, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Nothing, one more detail, to end the interaction  with me, please use the /exit command.
 
-Le estaré esperando, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+I will be waiting for you, one more detail, to end the interaction  with me, please use the /exit command.
 
-Vuelva pronto, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Come back soon, one more detail, to end the interaction  with me, please use the /exit command.
 
-Adiós, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Goodbye, one more detail, to end the interaction  with me, please use the /exit command.
 
-Nos vemos, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+See you, one more detail, to end the interaction  with me, please use the /exit command.
 
-Saludos a tu mamá y papá, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Greetings to your mom and dad, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta pronto, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until soon, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta siempre, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until always, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta luego, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until then, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta nunca, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until ever, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta mañana, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until tomorrow, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta la otra semana, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until next week, one more detail, to end the interaction  with me, please use the /exit command.
 
-Hasta el próximo fin de semana, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Until next weekend, one more detail, to end the interaction  with me, please use the /exit command.
 
-Te veo luego, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+I’ll see you later, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Cuídate!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Take care!, one more detail, to end the interaction  with me, please use the /exit command.
 
-Nos estamos viendo, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+We are seeing each other, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Nos vemos!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+See you!, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Por favor cuídate!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Please take care!, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Te veo luego!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+I’ll see you later!, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Hasta luego! ¡Qué te vaya bien!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+See you later! Go well!, one more detail, to end the interaction  with me, please use the /exit command.
 
-Fue bueno verlo, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+It was good to see it, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Qué tengan una buen día!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Have a good day!, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Adiós!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Goodbye!, one more detail, to end the interaction  with me, please use the /exit command.
 
-¡Adios!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+Adios!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Bye, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Bye, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Chao, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Chao, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Fue un placer, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ It was a pleasure, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta luego, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ So long, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ No hay de qué, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Not at all, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Con mucho gusto, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ With pleasure, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ De nada, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ You’re welcome, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Le estaré esperando, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ I will be waiting for you, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Vuelva pronto, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Come back soon, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Adiós, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Goodbye, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Nos vemos, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ See you, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Saludos a tu mamá y papá, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Greetings to your mom and dad, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta pronto, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ See you soon, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta siempre, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ So long, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta luego, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ So long, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta nunca, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ So long, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta mañana, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Until tomorrow, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta la otra semana, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Until next week, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Hasta el próximo fin de semana, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Until next weekend, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Te veo luego, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ I’ll see you later, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Cuídate!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Take care!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Nos estamos viendo, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ We are seeing each other, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Nos vemos!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ See you!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Por favor cuídate!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Please take care!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Te veo luego!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ I’ll see you later!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Hasta luego! ¡Qué te vaya bien!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ See you later! Go well!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ Fue bueno verlo, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Good to see you, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Qué tengan una buen día!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Have a nice day!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Adiós!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Goodbye!, one more detail, to end the interaction  with me, please use the /exit command.
 
-💁🏻‍♀️ ¡Adios!, un detalle más, para finalizar la interacción conmigo por favor utiliza el comando /exit.
+💁🏻‍♀️ Adios!, one more detail, to end the interaction  with me, please use the /exit command.
 
+To recommend movies according to your tastes you must use the command /recommend.
 
-Para que te recomendemos películas según tus gustos debes de usar el comando /recommend.
+For us to indicate movies according to your tastes you must use the command /recommend.
 
-Para que te indiquemos películas según tus gustos debes de usar el comando /recommend.
+For what we suggest movies according to your tastes you should use the command /recommend.
 
-Para qué te sugerimos películas según tus gustos debes de usar el comando /recommend.
+In order to cancel or return the movies you have rented, you must use the /cancel command.
 
-Para poder cancelar o devolver las películas que has rentado debes de usar el comando /cancel.
+If you want to cancel your movie rental you must use the /cancel command.
 
-Si deseas anular tu renta de películas debes de usar el comando /cancel.
+If you want to abolish your movie income you must use the /cancel command.
 
-Si deseas abolir tu renta de películas debes de usar el comando /cancel.
+If you want to delete your movie rental you must use the /cancel command.
 
-Si deseas suprimir tu renta de películas debes de usar el comando /cancel.
+If you want to cancel your movie rental you must use the /cancel command.
 
-Si deseas rescindir tu renta de películas debes de usar el comando /cancel.
+If you want to revoke your movie rental you must use the /cancel command.
 
-Si deseas revocar tu renta de películas debes de usar el comando /cancel.
+If you want to repeal your movie rental you must use the /cancel command.
 
-Si deseas derogar tu renta de películas debes de usar el comando /cancel.
+If you want to archive your movie rental you must use the /cancel command.
 
-Si deseas archivar tu renta de películas debes de usar el comando /cancel.
+To see the status of the movies you have rented you must use the /show command.
 
-Para ver el estado de las películas que has rentado debes de usar el comando /show.
+To register you must use the /register command.
 
-Para registrarte debes de usar el comando /register.
+If you need help or are confused you can use the /help command.
 
-Si necesitas ayuda o estás confundido puedes usar el comando /help.
+If you need help or are confused you can use the /help command.
 
-Si necesitas ser auxiliado o estás confundido puedes usar el comando /help.
+If you need to be supported or are confused you can use the /help command.
 
-Si necesitas ser apoyado o estás confundido puedes usar el comando /help.
+If you need help or are confused you can use the /help command.
 
-Si necesitas ser socorrido o estás confundido puedes usar el comando /help.
+If you need cooperation or are confused you can use the /help command.
 
-Si necesitas cooperación o estás confundido puedes usar el comando /help.
+If you need assistance or are confused you can use the /help command.
 
-Si necesitas asistencia o estás confundido puedes usar el comando /help.
+If you need service or are confused you can use the /help command.
 
-Si necesitas servicio o estás confundido puedes usar el comando /help.
+To confirm your order you must use the /rent command.
 
-Para confirmar tu pedido debes de usar el comando /rent.
+To authorize your order you must use the /rent command.
 
-Para autorizar tu pedido debes de usar el comando /rent.
+To check your order you must use the /rent command.
 
-Para comprobar tu pedido debes de usar el comando /rent.
+To secure your order you must use the /rent command.
 
-Para asegurar tu pedido debes de usar el comando /rent.
+To affirm your order you must use the /rent command.
 
-Para afirmar tu pedido debes de usar el comando /rent.
+To search for movies by name you must use the /search command.
 
-Para buscar películas por nombre debes de utilizar el comando /search.
+To search for movies by name you must use the /search command.
 
-Para rebuscar películas por nombre debes de utilizar el comando /search.
+To investigate movies by name you must use the command /search.
 
-Para investigar películas por nombre debes de utilizar el comando /search.
+To find out movies by name you must use the /search command.
 
-Para averiguar películas por nombre debes de utilizar el comando /search.
+To browse movies by name you must use the /search command.
 
-Para examinar películas por nombre debes de utilizar el comando /search.
+To browse movies by name you must use the /search command.
 
-Para explorar películas por nombre debes de utilizar el comando /search.
+To search for movies by release date you must use the /search command.
 
-Para buscar películas por fecha de estreno debes de utilizar el comando /search.
+To search for movies by release date you must use the /search command.
 
-Para rebuscar películas por fecha de estreno debes de utilizar el comando /search.
+To investigate movies by release date you must use the /search command.
 
-Para investigar películas por fecha de estreno debes de utilizar el comando /search.
+To find out movies by release date you must use the /search command.
 
-Para averiguar películas por fecha de estreno debes de utilizar el comando /search.
+To browse movies by release date you must use the /search command.
 
-Para examinar películas por fecha de estreno debes de utilizar el comando /search.
+To browse movies by release date you must use the /search command.
 
-Para explorar películas por fecha de estreno debes de utilizar el comando /search.
+To exit the bot you must use the /exit command.
 
-Para salir del bot debes de usar el comando /exit.
+To end the session  with me, you must use the /exit command.
 
-Para terminar la sesión conmigo debes de usar el comando /exit.
+To end the session  with me, you must use the /exit command.
 
-Para acabar la sesión conmigo debes de usar el comando /exit.
+To finish the session  with me, you must use the /exit command.
 
-Para rematar la sesión conmigo debes de usar el comando /exit.
+To conclude the session  with me, you must use the /exit command.
 
-Para concluir la sesión conmigo debes de usar el comando /exit.
+To end the session  with me, you must use the /exit command.
 
-Para finalizar la sesión conmigo debes de usar el comando /exit.
+To finish the session  with me, you must use the /exit command.
 
-Para ultimar la sesión conmigo debes de usar el comando /exit.
-
-Para completar la sesión conmigo debes de usar el comando /exit.
+To complete the session  with me, you must use the /exit command.
 

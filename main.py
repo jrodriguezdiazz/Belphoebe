@@ -46,97 +46,95 @@ conn = pyodbc.connect('Driver={SQL Server};'
 cursor = conn.cursor()
 
 GREETINGS_INPUTS = (
-    "hola", "buenas", "saludos", "qué tal", "hey", "buenos dias", "klk", "buenas tardes", "buenas noches", "dime a ver")
+    "hello", "Hey", "Good Morning", "klk", "Good evening", "Good night", "Tell me to see")
 
 GREETINGS_OUTPUTS = [
-    "Hola, si necesitas ayuda puedes usar el comando /help",
-    "Hola, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help",
-    "Hola, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help",
-    "Hola, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help",
-    "Buenas, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help",
-    "Dime a ver, si necesitas ayuda puedes usar el comando /help",
-    "¿En qué te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help",
-    "Hola, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Buenas, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Dime a ver, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "¿En qué te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help",
-    "Hola 🙋🏻‍♀️, ¿Qué tal?\nSi necesitas ayuda puedes usar el comando /help",
-    "Hola 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi necesitas ayuda puedes usar el comando /help",
-    "Hola 🙋🏻‍♀️, encantado de hablar contigo.\nSi necesitas ayuda puedes usar el comando /help",
-    "Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi necesitas ayuda puedes usar el comando /help",
-    "Dime a ver 🙋🏻‍♀️, si necesitas ayuda puedes usar el comando /help",
-    "¿En qué te puedo ayudar? 🙋🏻‍♀️\nSi necesitas ayuda puedes usar el comando /help",
-    "Hola 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola 🙋🏻‍♀️, ¿Qué tal?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola 🙋🏻‍♀️, ¿Cómo te puedo ayudar?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Hola 🙋🏻‍♀️, encantado de hablar contigo.\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Buenas 🙋🏻‍♀️, ¿Cómo le puedo servir?\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "Dime a ver 🙋🏻‍♀️, si quieres que te recomiende algunas películas puedes usar el comando /recommend",
-    "¿En qué te puedo ayudar?🙋🏻‍♀️\nSi quieres que te recomiende algunas películas puedes usar el comando /recommend",
-
+    "Hello, if you need help you can use the command /help",
+    "Hi, how about?  If you need help you can use the /help command",
+    "Hello, how can I help you?  If you need help you can use the /help command",
+    "Hello, nice to talk to you.  If you need help you can use the command /help",
+    "Good, how can I serve you?  If you need help you can use the /help command",
+    "Tell me to see, if you need help you can use the command /help",
+    "How can I help you?  If you need help you can use the /help command" ,
+    "Hello, if you want me to recommend some movies you can use the command /recommend",
+    "Hello, how about?  If you want me to recommend some movies you can use the command /recommend",
+    "Hello, how can I help you?  If you want me to recommend some movies you can use the command /recommend",
+    "Hello, nice to talk to you.  If you want me to recommend some movies you can use the command /recommend",
+    "Good, how can I serve you?  If you want me to recommend some movies you can use the command /recommend",
+    "Tell me to see, if you want me to recommend some movies you can use the command /recommend",
+    "How can I help you?  If you want me to recommend some movies you can use the command /recommend",
+    "Hello 🙋🏻‍♀️, if you need help you can use the /help command",
+    "Hello 🙋🏻‍♀️, how about?  If you need help you can use the /help command",
+    "Hello 🙋🏻‍♀️, how can I help you?  If you need help you can use the /help command",
+    "Hello 🙋🏻‍♀️, nice to talk to you.  If you need help, you can use the /help command."
+    "Good 🙋🏻‍♀️, how can I serve you?  If you need help you can use the /help command",
+    "Tell me to see 🙋🏻‍♀️, if you need help you can use the /help command",
+    "How can I help you? 🙋🏻‍♀️  If you need help you can use the /help command,"
+    "Hello 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend",
+    "Hello 🙋🏻‍♀️, how about?  If you want me to recommend some movies you can use the command /recommend",
+    "Hello 🙋🏻‍♀️, How can I help you?  If you want me to recommend some movies you can use the command /recommend",
+    "Hello 🙋🏻‍♀️, nice to talk to you.  If you want me to recommend some movies you can use the command /recommend",
+    "Good 🙋🏻‍♀️, How can I serve you?  If you want me to recommend some movies you can use the command /recommend",
+    "Tell me to watch 🙋🏻‍♀️, if you want me to recommend some movies you can use the command /recommend",
+    "How can I help you?🙋🏻‍♀️  If you want me to recommend some movies you can use the /recommend command,"
 ]
 
 GOODBYE_OUTPUTS = [
     "Bye",
-    "Chao",
-    "Fue un placer",
-    "Hasta luego",
-    "No hay de qué",
-    "Con mucho gusto",
-    "De nada",
-    "Le estaré esperando",
-    "Vuelva pronto",
-    "Adiós",
-    "Nos vemos",
-    "Saludos a tu mamá y papá",
-    "Hasta pronto",
-    "Hasta siempre",
-    "Hasta luego",
-    "Hasta nunca",
-    "Hasta mañana",
-    "Hasta la otra semana",
-    "Hasta el próximo fin de semana",
-    "Te veo luego",
-    "¡Cuídate!",
-    "Nos estamos viendo",
-    "¡Nos vemos!",
-    "¡Por favor cuídate!",
-    "¡Te veo luego!",
-    "¡Hasta luego! ¡Qué te vaya bien!",
-    "Fue bueno verlo",
-    "¡Qué tengan una buen día!",
+    "Bye",
+    "It was a pleasure",
+    "See you later",
+    "There’s nothing to it.",
+    "With great pleasure",
+    "You are welcome",
+    "I’ll be waiting for you",
+    "Come back soon",
+    "Farewell",
+    "See you later",
+    "Greetings to your mom and dad",
+    "See you soon",
+    "See you forever",
+    "See you later",
+    "Good riddance to you",
+    "See you tomorrow",
+    "See you next week",
+    "See you next weekend",
+    "See you later",
+    "Take care of yourself!",
+    "We are meeting",
+    "See you later!",
+    "Please take care of yourself!",
+    "I’ll see you later!",
+    "See you later! Have a good day!",
+    "Good to see you.",
+    "Have a nice day!",
     "💁🏻‍♀️Bye",
     "💁🏻‍♀️Chao",
-    "💁🏻‍♀️Fue un placer",
-    "💁🏻‍♀️Hasta luego",
-    "💁🏻‍♀️No hay de qué",
-    "💁🏻‍♀️Con mucho gusto",
-    "💁🏻‍♀️De nada",
-    "💁🏻‍♀️Le estaré esperando",
-    "💁🏻‍♀️Vuelva pronto",
-    "💁🏻‍♀️Adiós",
-    "💁🏻‍♀️Nos vemos",
-    "💁🏻‍♀️Saludos a tu mamá y papá",
-    "💁🏻‍♀️Hasta pronto",
-    "💁🏻‍♀️Hasta siempre",
-    "💁🏻‍♀️Hasta luego",
-    "💁🏻‍♀️Hasta nunca",
-    "💁🏻‍♀️Hasta mañana",
-    "💁🏻‍♀️Hasta la otra semana",
-    "💁🏻‍♀️Hasta el próximo fin de semana",
-    "💁🏻‍♀️Te veo luego",
-    "💁🏻‍♀️¡Cuídate!",
-    "💁🏻‍♀️Nos estamos viendo",
-    "💁🏻‍♀️¡Nos vemos!",
-    "💁🏻‍♀️¡Por favor cuídate!",
-    "💁🏻‍♀️¡Te veo luego!",
-    "💁🏻‍♀️¡Hasta luego! ¡Qué te vaya bien!",
-    "💁🏻‍♀️Fue bueno verlo",
-    "💁🏻‍♀️¡Qué tengan una buen día!"
+    "💁🏻‍♀️It was a pleasure.",
+    "💁🏻‍♀️See you later.",
+    "💁🏻‍♀️There’s nothing to it.",
+    "💁🏻‍♀️You’re welcome",
+    "💁🏻‍♀️I’ll be waiting for you.",
+    "💁🏻‍♀️Come back soon",
+    "💁🏻‍♀️Goodbye",
+    "💁🏻‍♀️See you later.",
+    "💁🏻‍♀️Greetings to your mom and dad.",
+    "💁🏻‍♀️See you soon",
+    "💁🏻‍♀️So long",
+    "💁🏻‍♀️See you later.",
+    "💁🏻‍♀️So long",
+    "💁🏻‍♀️See you tomorrow.",
+    "💁🏻‍♀️See you next week.",
+    "💁🏻‍♀️See you next weekend.",
+    "💁🏻‍♀️I’ll see you later.",
+    "💁🏻‍♀️Take care of yourself!",
+    "💁🏻‍♀️We’re seeing each other.",
+    "💁🏻‍♀️See you later.",
+    "💁🏻‍♀️Please take care!",
+    "💁🏻‍♀️I’ll see you later!",
+    "💁🏻‍♀️So long! Have a good day!",
+    "💁🏻‍♀️Good to see you.",
+    "💁🏻‍♀️Have a nice day!"
 ]
 
 total_price = 0
@@ -156,11 +154,11 @@ def send_email(chat_id):
     global total_price
     email_smtp = "smtp.gmail.com"
     email_port = 587
-    message['Subject'] = "Belphoebe: Notificación renta de películas"
+    message['Subject'] = "Belphoebe: Movie rental notification"
     message['From'] = EMAIL_ADDERS
     message['To'] = user["email"]
     message.set_content(
-        f"Gracias por confiar en nosotros, su renta ha sido realizada con éxito.\n\n Total a pagar: ${total_price}\nLuego de {MINUTES_TO_UNDO_THE_RENT} minutos esta acción será irreversible.\n.")
+        f"Thank you for trusting us, your income has been made successfully.\n Total to pay: ${total_price}\nAfter {MINUTES_TO_UNDO_THE_RENT} minutes this action will be irreversible.\n.")
 
     server = smtplib.SMTP(email_smtp, email_port)
     server.starttls()
@@ -200,8 +198,7 @@ def response_user(user_message):
     from nltk.corpus import stopwords
     bot_response = ''
     sent_tokens.append(user_message)
-    # stop_words = [word.encode("utf-8") for word in ]
-    TfidfVec = TfidfVectorizer(tokenizer=LemNormalize, stop_words=stopwords.words('spanish'))
+    TfidfVec = TfidfVectorizer(tokenizer=LemNormalize, stop_words=stopwords.words('english'))
     tfidf = TfidfVec.fit_transform(sent_tokens)
     vals = cosine_similarity(tfidf[-1], tfidf)
     idx = vals.argsort()[0][-2]
@@ -209,8 +206,8 @@ def response_user(user_message):
     flat.sort()
     req_tfidf = flat[-2]
     if req_tfidf == 0:
-        bot_response = bot_response + "Lo siento, pero no comprendo lo que me quieres decir.\n¿Podrías tratar de " \
-                                      "decírmelo de otra forma, por favor? 🙇🏻‍♀️ "
+        bot_response = bot_response + "I’m sorry, but I don’t understand what you want to say to me.\nCould you try " \
+                                      "saying it another way, please? 🙇🏻‍♀️ "
         return bot_response
     else:
         bot_response = bot_response + sent_tokens[idx]
@@ -246,17 +243,16 @@ def send_exit(message):
 def send_help(message):
     bot.send_chat_action(message.chat.id, "typing")
     bot.reply_to(message, '''
-    ¡Hola! Soy Belphoebe , tu asistente virtual. \n¿Cómo te puedo ayudar en el día de hoy?  🙋🏻‍♀️
-    \n
-    /start - Inicia el chat con el bot
-    /help - Muestra esta ayuda
-    /recommend - Recomienda película en base a tus gustos
-    /register - Registra tu correo electrónico y número telefónico en el sistema
-    /search - Busca películas según por nombre o año de estreno
-    /rent - Rentar una película
-    /show - Mostrar las películas rentadas
-    /cancel - Cancelar todas las películas rentadas
-    /exit - Salir del chat con el bot
+    Hello! I’m Belphoebe, your virtual assistant.\nHow can I help you today?  🙋🏻‍♀️\n
+    /start - Start the chat with me
+    /help - I show you the available commands
+    /recommend - I recommend movies based on your tastes
+    /search - I look for movies by name or year of release
+    /register - Log your email and phone number into the system
+    /rent - Rent a movie
+    /show - I show the movies you make rented
+    /cancel - I cancel the movie rent
+    /exit - You finish the talk with me
     ''')
 
 
@@ -272,13 +268,13 @@ def send_recommend(message):
 def register_user(message):
     reset_global_variables()
     if check_if_user_is_registered(message.chat.id):
-        text = f"Buenos días {message.from_user.first_name}, ya estás registrado en el sistema. Si te parece utiliza " \
-               f"el comando /recommend para recomendarte películas según tus gustos\n "
+        text = f"Good morning {message.from_user.first_name}, you are already registered in the system. If you think " \
+               f"to use the command /recommend to recommend movies according to your preference. "
         send_alert_message(message.chat.id, text)
     else:
         markup = ForceReply()
-        text = "Para realizar rentas de películas en nuestro sistema debe de proporcionarnos algunos datos " \
-               "personales.\n\n¿Cuál es tu número telefónico?"
+        text = "To make movie rentals in our system you must provide us with some personal data.\n What is your phone " \
+               "number? "
         bot.send_chat_action(message.chat.id, "typing")
         msg = bot.reply_to(message, text, reply_markup=markup)
         bot.register_next_step_handler(msg, ask_phone_number)
@@ -288,12 +284,12 @@ def register_user(message):
 def rent_movie(message):
     if check_if_user_has_rented_movies():
         markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        markup.add("Tarjeta de crédito", "Efectivo")
+        markup.add("Credit Card", "Cash")
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "¿Cómo deseas pagar?", reply_markup=markup)
+        msg = bot.reply_to(message, "How do you want to pay?", reply_markup=markup)
         bot.register_next_step_handler(msg, ask_payment_method)
     else:
-        send_alert_message(message.chat.id, "No haz seleccionado ninguna película para rentar 🙇🏻‍♀️")
+        send_alert_message(message.chat.id, "You have not selected any movie to rent 🙇🏻‍♀️")
 
 
 @bot.message_handler(commands=["show"])
@@ -302,10 +298,10 @@ def check_my_rented_movies(message):
     movies = pd.read_sql_query(query, conn)
     bot.send_chat_action(message.chat.id, "typing")
     if movies.empty:
-        bot.send_message(message.chat.id, "No tienes películas alquiladas por el momento.\nSi deseas que te recomiende "
-                                          "algunas películas en base a tu historial utiliza el comando /recommend")
+        bot.send_message(message.chat.id, "You don't have movies rented at the moment.\nIf you want me to recommend "
+                                          "some movies based on your history use the command /recommend")
     else:
-        bot.send_message(message.chat.id, "Estas son las películas que tienes alquiladas")
+        bot.send_message(message.chat.id, "These are the movies you have rented")
         show_my_rented_movies(message, movies)
 
 
@@ -314,45 +310,44 @@ def cancel_all_rented_movies(message):
     bot.send_chat_action(message.chat.id, "typing")
     if check_if_user_has_rented_movies():
         markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        markup.add("✅ Si", "❌ No")
+        markup.add("✅ Yes", "❌ No")
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "¿Estás seguro que deseas cancelar todas las películas?", reply_markup=markup)
+        msg = bot.reply_to(message, "Are you sure you want to cancel all the movies?", reply_markup=markup)
         bot.register_next_step_handler(msg, cancel_all_rented_movies_confirmation)
     else:
-        send_alert_message(message.chat.id, "No tienes películas alquiladas por el momento.\nSi deseas que te "
-                                            "recomiende algunas películas en base a tu historial utiliza el comando "
-                                            "/recommend")
+        send_alert_message(message.chat.id, "You don't have movies rented at the moment.\nIf you want me to recommend "
+                                            "some movies based on your history use the command /recommend")
 
 
 @bot.message_handler(commands=["search"])
 def search_movie(message):
     if check_if_user_is_registered(message.chat.id):
         markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        markup.add("🎬 Título", "🗓️ Año de estreno")
+        markup.add("🎬 Title", "🗓️ Release Year")
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "¿Qué deseas buscar?", reply_markup=markup)
+        msg = bot.reply_to(message, "What movie do you want to look for?", reply_markup=markup)
         bot.register_next_step_handler(msg, search_movie_by_title_or_genre_or_release_date)
     else:
         markup = ForceReply()
-        text = "Para realizar búsquedas de películas en nuestro sistema debe de proporcionarnos algunos datos " \
-               "personales.\n\n¿Cuál es tu número telefónico?"
+        text = "To search movie searches in our system you must provide us with some personal data.\nWhat is your " \
+               "phone number? "
         bot.send_chat_action(message.chat.id, "typing")
         msg = bot.reply_to(message, text, reply_markup=markup)
         bot.register_next_step_handler(msg, ask_phone_number)
 
 
 def search_movie_by_title_or_genre_or_release_date(message):
-    if message.text == "🎬 Título":
+    if message.text == "🎬 Title":
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "¿Qué título deseas buscar?")
+        msg = bot.reply_to(message, "What title do you want to look for?")
         bot.register_next_step_handler(msg, search_movie_by_title)
-    elif message.text == "🗓️ Año de estreno":
+    elif message.text == "🗓️ Release Year":
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "¿Qué fecha de estreno deseas buscar?")
+        msg = bot.reply_to(message, "What release date do you want to look for?")
         bot.register_next_step_handler(msg, search_movie_by_release_date)
     else:
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "Por favor, ingresa un opción válido.\n🎬 Título\n🗓️ Año de estreno")
+        msg = bot.reply_to(message, "Please enter a valid option.\n🎬 Title\n🗓️ Release Year")
         bot.register_next_step_handler(msg, search_movie_by_title_or_genre_or_release_date)
 
 
@@ -361,7 +356,7 @@ def search_movie_by_title(message):
     query = f"SELECT * FROM view_movies_by_title('{message.text}');"
     movies = pd.read_sql_query(query, conn)
     if movies.empty:
-        send_alert_message(message.chat.id, "No se han encontrado resultados 🙇🏻‍♀️")
+        send_alert_message(message.chat.id, "No results found 🙇🏻‍♀️")
     else:
         show_movies(message.chat.id, movies)
 
@@ -375,11 +370,11 @@ def search_movie_by_release_date(message):
         query = f"SELECT * FROM view_movies_by_release_date('{start_date}', '{end_date}');"
         movies = pd.read_sql_query(query, conn)
         if movies.empty:
-            send_alert_message(message.chat.id, "No se han encontrado resultados 🙇🏻‍♀️")
+            send_alert_message(message.chat.id, "No results found 🙇🏻‍♀️")
         else:
             show_movies(message.chat.id, movies)
     else:
-        msg = bot.reply_to(message, "Por favor, ingresa un año válido.\nEjemplo: Entre 1916 y 2017")
+        msg = bot.reply_to(message, "Please enter a valid year.\nExample: Between 1916 and 2017")
         bot.register_next_step_handler(msg, search_movie_by_release_date)
 
 
@@ -391,7 +386,7 @@ def manage_text(message):
     if response is not None:
         bot.send_message(message.chat.id, response)
     else:
-        bot.send_message(message.chat.id, "Lo siento, no he entendido tu mensaje.\nPor favor, inténtalo de nuevo.")
+        bot.send_message(message.chat.id, "I’m sorry, I didn’t get your message. Please try again.")
 
 
 def is_validate_year(year):
@@ -405,13 +400,13 @@ def is_validate_year(year):
 def cancel_all_rented_movies_confirmation(message):
     if message.text == "✅ Si":
         bot.send_chat_action(message.chat.id, "typing")
-        bot.send_message(message.chat.id, "Cancelando todas las películas...")
+        bot.send_message(message.chat.id, "Canceling all the movies...")
         reset_global_variables()
-        send_alert_message(message.chat.id, "Todas las películas han sido canceladas 🙍🏻‍♀️")
+        send_alert_message(message.chat.id, "All movies have been canceled 🙍🏻‍♀️")
     elif message.text == "❌ No":
-        send_alert_message(message.chat.id, "Cancelación cancelada 🙅🏻‍♀️")
+        send_alert_message(message.chat.id, "Cancelled 🙅🏻‍♀️")
     else:
-        send_alert_message(message.chat.id, "Respuesta no válida 🙅🏻‍♀️")
+        send_alert_message(message.chat.id, "Invalid response 🙅🏻‍♀️")
 
 
 def check_if_user_has_rented_movies():
@@ -465,7 +460,7 @@ def remove_movie_from_my_rentals(data, chat_id):
     conn.execute(query)
     conn.commit()
     update_invoice_price(invoice_id, movie_price)
-    send_alert_message(chat_id, f"Has devuelto la película {movie_id}")
+    send_alert_message(chat_id, f"You have returned the movie {movie_id}")
 
 
 def get_time_left(invoice_id):
@@ -482,10 +477,10 @@ def show_my_rented_movies(message, pending_movies_rented):
         movie_id = movie["movie_id"]
         invoice_id = movie["id"]
         time_left = get_time_left(invoice_id)
-        text = f"<b>Tiempo restante para devolver la película:</b> <i>{time_left} minutos</i>\n"
+        text = f"<b>Remaining time to return the movie:</b> <i>{time_left} minutes</i>\n"
         text += create_message_movie_info(movie)
         cancel_rent_button = InlineKeyboardButton(
-            text=f'Hazme click si deseas devolver esta película',
+            text=f'Click me if you want to return this movie',
             callback_data=f'remove_movie,{invoice_id},{movie_id}')
         reply_markup = InlineKeyboardMarkup(
             [[cancel_rent_button]]
@@ -501,12 +496,12 @@ def create_message_movie_info(movie, index=None, with_overview=True):
         text = f'{index} - {movie["title"]}: \n'
     if with_overview:
         text += f'<i>{movie["overview"][0:300]}...</i>\n'
-    text += f'<b>Título original:</b> <i>{movie["original_title"]}</i>\n'
-    text += f'<b>Precio:</b> <i>${movie["price"]}</i>\n'
-    text += f'<b>Fecha de estreno:</b> <i>{movie["release_date"]}</i>\n'
-    text += f'<b>Puntuación IMDB:</b> <i>{round(movie["vote_average"], 1)}</i>\n'
+    text += f'<b>Original Title:</b> <i>{movie["original_title"]}</i>\n'
+    text += f'<b>Price:</b> <i>${movie["price"]}</i>\n'
+    text += f'<b>Release Date:</b> <i>{movie["release_date"]}</i>\n'
+    text += f'<b>Vote Average:</b> <i>{round(movie["vote_average"], 1)}</i>\n'
     if movie["homepage"] is not None:
-        text += f'<b>Página Web:</b> <i><a href="{movie["homepage"]}">{movie["homepage"]}</a></i>'
+        text += f'<b>Homepage:</b> <i><a href="{movie["homepage"]}">{movie["homepage"]}</a></i>'
     return text + "\n\n"
 
 
@@ -533,9 +528,8 @@ def save_rent_movies(chat_id):
     cursor.execute(query)
     conn.commit()
     time = 60 * MINUTES_TO_UNDO_THE_RENT
-    text = f"Has alquilado {len(movies_rented)} películas por un total de ${total_price}.\nLuego de {MINUTES_TO_UNDO_THE_RENT} minutos esta " \
-           f"acción será irreversible.\nPara poder deshacer la renta, por favor, utilize el siguiente comando " \
-           f"/show "
+    text = f"You have rented {len(movies_rented)} movies for a total of ${total_price}. This action will be " \
+           f"irreversible. In order to undo the rent, please use the following command /show "
     send_alert_message(chat_id, text)
     start_time = threading.Timer(time, update_invoice_status, [rent_id])
     start_time.start()
@@ -545,16 +539,16 @@ def save_rent_movies(chat_id):
 def confirm_rent_movies(message, payment_method):
     global total_price
     if message.text == "✅ Si":
-        if payment_method == "Efectivo":
+        if payment_method == "Cash":
             total_price = total_price - (total_price * 0.1)
         save_rent_movies(message.chat.id)
-        send_alert_message(message.chat.id, "Gracias por elegirnos, esperamos que disfrutes tu película 🙆🏻‍♀️")
+        send_alert_message(message.chat.id, "Thank you for choosing us, we hope you enjoy your movie 🙆🏻‍♀️")
         send_email(message.chat.id)
     elif message.text == "❌ No":
-        send_alert_message(message.chat.id, "De nada, le estaré esperando 🙍🏻‍♀️")
+        send_alert_message(message.chat.id, "You're welcome, I'll be waiting for you 🙍🏻‍♀️")
     else:
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.send_message(message.chat.id, "No entiendo, por favor, intente de nuevo 🙍🏻‍♀️")
+        msg = bot.send_message(message.chat.id, "I don't understand, please try again 🙍🏻‍♀️")
         bot.register_next_step_handler(msg, rent_confirmation)
 
 
@@ -562,15 +556,14 @@ def rent_confirmation(message):
     markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     markup.add("✅ Si", "❌ No")
     bot.send_chat_action(message.chat.id, "typing")
-    msg = bot.reply_to(message, "¿Deseas confirmar tu compra?", reply_markup=markup)
+    msg = bot.reply_to(message, "Do you want to confirm your order?", reply_markup=markup)
     bot.register_next_step_handler(msg, confirm_rent_movies, message.text)
 
 
 def ask_payment_method(message):
-    if message.text != "Tarjeta de crédito" and message.text != "Efectivo":
+    if message.text != "Credit Card" and message.text != "Cash":
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "Por favor, ingresa una opción válida.\nDebe de seleccionar 'Tarjeta de crédito' "
-                                    "o 'Efectivo'")
+        msg = bot.reply_to(message, "Please enter a valid option.\nMust select 'Credit Card' or 'Cash'.")
         bot.register_next_step_handler(msg, ask_payment_method)
     else:
         rent_confirmation(message)
@@ -583,11 +576,11 @@ def ask_phone_number(message):
         USER_DATA[message.chat.id]["phone"] = message.text
         markup = ForceReply()
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.send_message(message.chat.id, "¿Cuál es tu correo electrónico?", reply_markup=markup)
+        msg = bot.send_message(message.chat.id, "What’s your email address?", reply_markup=markup)
         bot.register_next_step_handler(msg, ask_email)
     else:
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "Por favor, ingresa un número de teléfono válido.")
+        msg = bot.reply_to(message, "Please enter a valid phone number.")
         bot.register_next_step_handler(msg, ask_phone_number)
 
 
@@ -604,15 +597,15 @@ def ask_email(message):
     if is_valid_email(email):
         USER_DATA[message.chat.id]["email"] = message.text
         markup = ReplyKeyboardMarkup()
-        text = f'Muchas Gracias {message.from_user.first_name} {message.from_user.last_name}\n A continuación te ' \
-               f'mostraremos nuestro catálogo de películas'
+        text = f'Thank you very much {message.from_user.first_name} {message.from_user.last_name}.\nBelow we will ' \
+               f'show you our movie catalogue 🎬'
         bot.send_chat_action(message.chat.id, "typing")
         msg = bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="HTML")
         save_user_data(message.chat.id)
         get_movies(msg)
     else:
         bot.send_chat_action(message.chat.id, "typing")
-        msg = bot.reply_to(message, "Por favor, ingresa un correo electrónico válido.")
+        msg = bot.reply_to(message, "Please enter a valid email.")
         bot.register_next_step_handler(msg, ask_email)
 
 
@@ -676,9 +669,8 @@ def get_movie_info(chat_id, movie_id, show_recommend_button=True):
     text = create_message_movie_info(movie)
     movie_id = movie["id"]
     movie_title = movie["title"]
-    rent_movie_button = InlineKeyboardButton(text=f'🛒 Rentar película ', callback_data=f'rent_movie,{movie_id}')
-    recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recomendar película',
-                                                  callback_data=f'recommend_movie,{movie_id},{movie_title}')
+    rent_movie_button = InlineKeyboardButton(text=f'🛒 Rent Movie', callback_data=f'rent_movie,{movie_id}')
+    recommend_movie_button = InlineKeyboardButton(text=f'🔍 Recommend Movie', callback_data=f'recommend_movie,{movie_id},{movie_title}')
     if show_recommend_button:
         reply_markup = InlineKeyboardMarkup(
             [[rent_movie_button, recommend_movie_button]]
@@ -714,17 +706,17 @@ def rent_movie(chat_id, movie):
     bot.send_chat_action(chat_id, "typing")
     if is_between_2016_and_2017:
         bot.send_message(chat_id,
-                         f"Nota: La película {title} es considerada un estreno por lo que se cobrará 200 pesos "
-                         f"a su compra 🙆🏻‍♀️")
+                         f"Note: The movie {title} is considered a premiere so it will be charged 200 dollars upon "
+                         f"purchase 🙆🏻‍♀️")
         total_price += 200
     if is_fifty_year_old:
-        bot.send_message(chat_id, "Lo sentimos, no se puede rentar una película de hace más de 50 años 🙍🏻‍♀️")
+        bot.send_message(chat_id, "Sorry, You can't rent a movie from more than 50 years ago 🙍🏻‍♀️")
         return
 
     total_price += int(price)
     movies_rented.append({'id': movie_id, 'price': price})
-    text = f'Haz agregado la película {title}\nEl precio es de ${price}.\nEl precio total es de ${total_price}.00' \
-           f'\nPara finalizar el proceso utiliza el comando /rent\nPara cancelar el proceso utiliza el comando /cancel'
+    text = f'You have added the movie {title} The price is ${price}. The total price is ${total_price}. To finish the ' \
+           f'process use the /rent command To cancel the process use the /cancel command '
     bot.send_chat_action(chat_id, "typing")
     bot.send_message(chat_id, text, parse_mode="html")
 
@@ -737,11 +729,11 @@ def get_movie(data):
 
 
 def recommend_movie(data, chat_id):
-    send_alert_message(chat_id, "🏃🏻‍♀️ Recomendando película...")
+    send_alert_message(chat_id, "🏃🏻‍♀️ Looking for movies to recommend...")
     _, movie_id, movie_title = data.split(",")
     movies = predict_movie(movie_title)
     if len(movies) == 0:
-        send_alert_message(chat_id, "No se encontraron películas similares 😔")
+        send_alert_message(chat_id, "No similar movies found")
         return
     query = "SELECT id FROM movies WHERE title IN ({})".format(",".join(["'{}'".format(movie) for movie in movies]))
     movies = pd.read_sql_query(query, conn)
@@ -757,7 +749,7 @@ def show_movies(chat_id, movies, page=0, message_id=None):
 
     start = page * N_RES_PAGE
     end = start + N_RES_PAGE
-    text = f"<i><b>Página {start + 1} - {end} de {len(movies)}</b></i>\n\n"
+    text = f"<i><b>Page {start + 1} - {end} of {len(movies)}</b></i>\n\n"
     buttons = []
     for index, movie in movies[start:end].iterrows():
         buttons.append(InlineKeyboardButton(text=str(index + 1), callback_data=f"get_movie_info,{movie['id']}"))
@@ -798,7 +790,7 @@ def handler_previous_button(call):
     data = pickle.load(open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "rb"))
     is_first_page = data["page"] == 0
     if is_first_page:
-        bot.answer_callback_query(call.id, "No puedes retroceder más")
+        bot.answer_callback_query(call.id, "You can’t go back any more")
     else:
         data["page"] -= 1
         movies = data["movies"]
@@ -814,7 +806,7 @@ def handler_next_button(call):
     data = pickle.load(open(f"{SEARCH_HISTORY_FOLDER}{chat_id}_{message_id}.text", "rb"))
     is_last_page = data["page"] * N_RES_PAGE + N_RES_PAGE >= len(data["movies"])
     if is_last_page:
-        bot.answer_callback_query(call.id, "No puedes avanzar más")
+        bot.answer_callback_query(call.id, "No more movies to show")
     else:
         data["page"] += 1
         movies = data["movies"]
@@ -842,17 +834,15 @@ def callback_handler(call):
 
 print("Welcome to the bot")
 bot.set_my_commands([
-    telebot.types.BotCommand(command="/start", description="Inicia el chat con el bot"),
-    telebot.types.BotCommand(command="/help", description="Muestra la ayuda del bot"),
-    telebot.types.BotCommand(command="/recommend", description="Recomienda película en base a tus gustos"),
-    telebot.types.BotCommand(command="/search",
-                             description="Busca películas según por nombre o año de estreno"),
-    telebot.types.BotCommand(command="/register",
-                             description="Registra tu correo electrónico y número telefónico en el sistema"),
-    telebot.types.BotCommand(command="/rent", description="Rentar una película"),
-    telebot.types.BotCommand(command="/show", description="Muestra las películas rentadas"),
-    telebot.types.BotCommand(command="/cancel", description="Cancelar la renta de la o las películas"),
-    telebot.types.BotCommand(command="/exit", description="Salir del chat con el bot")
+    telebot.types.BotCommand(command="/start", description="Start the chat with me"),
+    telebot.types.BotCommand(command="/help", description="I show you the available commands"),
+    telebot.types.BotCommand(command="/recommend", description="I recommend movies based on your tastes"),
+    telebot.types.BotCommand(command="/search", description="I look for movies by name or year of release"),
+    telebot.types.BotCommand(command="/register", description="Log your email and phone number into the system"),
+    telebot.types.BotCommand(command="/rent", description="Rent a movie"),
+    telebot.types.BotCommand(command="/show", description="I show the movies you make rented"),
+    telebot.types.BotCommand(command="/cancel", description="I cancel the movie rent"),
+    telebot.types.BotCommand(command="/exit", description="You finish the talk with me")
 ])
 bot.infinity_polling()
 
